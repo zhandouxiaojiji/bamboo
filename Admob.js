@@ -2,20 +2,46 @@ cc.Class({
     extends: cc.Component,
     
     onLoad: function () {
-        //Add this line to onLoad
         this.admobInit();
     },
 
     admobInit: function() {
-        //finish it after import admob, let it empty for now
-        sdkbox.PluginAdMob.init();
+         if(cc.sys.isMobile) {
+            var self = this
+            sdkbox.PluginAdMob.setListener({
+                adViewDidReceiveAd: function(name) {
+                    self.showInfo('adViewDidReceiveAd name=' + name);
+                },
+                adViewDidFailToReceiveAdWithError: function(name, msg) {
+                    self.showInfo('adViewDidFailToReceiveAdWithError name=' + name + ' msg=' + msg);
+                },
+                adViewWillPresentScreen: function(name) {
+                    self.showInfo('adViewWillPresentScreen name=' + name);
+                },
+                adViewDidDismissScreen: function(name) {
+                    self.showInfo('adViewDidDismissScreen name=' + name);
+                },
+                adViewWillDismissScreen: function(name) {
+                    self.showInfo('adViewWillDismissScreen=' + name);
+                },
+                adViewWillLeaveApplication: function(name) {
+                    self.showInfo('adViewWillLeaveApplication=' + name);
+                }
+            });
+            sdkbox.PluginAdMob.init();
+        }
     },
 
     cacheInterstitial: function() {
-        //finish it after import admob, let it empty for now
+        console.log("show admob");
+        if(cc.sys.isMobile) {
+            sdkbox.PluginAdMob.cache('gameover');
+        }
     },
 
     showInterstitial: function() {
-        //finish it after import admob, let it empty for now
+        if(cc.sys.isMobile) {
+            sdkbox.PluginAdMob.show('gameover');
+        }
     },
 });
