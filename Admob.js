@@ -1,4 +1,6 @@
 cc.Class({
+    extends: cc.Component,
+    
     onLoad: function () {
         //Add this line to onLoad
         this.admobInit();
@@ -6,6 +8,7 @@ cc.Class({
 
     admobInit: function() {
         //finish it after import admob, let it empty for now
+        sdkbox.PluginAdMob.init();
     },
 
     cacheInterstitial: function() {
@@ -15,4 +18,4 @@ cc.Class({
     showInterstitial: function() {
         //finish it after import admob, let it empty for now
     },
-}
+});
