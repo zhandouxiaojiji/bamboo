@@ -6,42 +6,42 @@ cc.Class({
     },
 
     admobInit: function() {
-         if(cc.sys.isMobile) {
+        if(cc.sys.isMobile) {
             var self = this
             sdkbox.PluginAdMob.setListener({
                 adViewDidReceiveAd: function(name) {
-                    self.showInfo('adViewDidReceiveAd name=' + name);
+                    console.log('adViewDidReceiveAd name=' + name);
                 },
                 adViewDidFailToReceiveAdWithError: function(name, msg) {
-                    self.showInfo('adViewDidFailToReceiveAdWithError name=' + name + ' msg=' + msg);
+                    console.log('adViewDidFailToReceiveAdWithError name=' + name + ' msg=' + msg);
                 },
                 adViewWillPresentScreen: function(name) {
-                    self.showInfo('adViewWillPresentScreen name=' + name);
+                    console.log('adViewWillPresentScreen name=' + name);
                 },
                 adViewDidDismissScreen: function(name) {
-                    self.showInfo('adViewDidDismissScreen name=' + name);
+                    console.log('adViewDidDismissScreen name=' + name);
                 },
                 adViewWillDismissScreen: function(name) {
-                    self.showInfo('adViewWillDismissScreen=' + name);
+                    console.log('adViewWillDismissScreen=' + name);
                 },
                 adViewWillLeaveApplication: function(name) {
-                    self.showInfo('adViewWillLeaveApplication=' + name);
+                    console.log('adViewWillLeaveApplication=' + name);
                 }
             });
             sdkbox.PluginAdMob.init();
         }
     },
 
-    cacheInterstitial: function() {
-        console.log("show admob");
+    cache: function(name) {
         if(cc.sys.isMobile) {
-            sdkbox.PluginAdMob.cache('gameover');
+            sdkbox.PluginAdMob.cache(name);
         }
     },
 
-    showInterstitial: function() {
+    show: function(name) {
+        console.log("show admob "+name);
         if(cc.sys.isMobile) {
-            sdkbox.PluginAdMob.show('gameover');
+            sdkbox.PluginAdMob.show(name);
         }
     },
 });
