@@ -11,9 +11,15 @@ cc.Class({
             sdkbox.PluginAdMob.setListener({
                 adViewDidReceiveAd: function(name) {
                     console.log('adViewDidReceiveAd name=' + name);
+                    if(this.cb){
+                        this.cb(true);
+                    }
                 },
                 adViewDidFailToReceiveAdWithError: function(name, msg) {
                     console.log('adViewDidFailToReceiveAdWithError name=' + name + ' msg=' + msg);
+                    if(this.cb){
+                        this.cb(false);
+                    }
                 },
                 adViewWillPresentScreen: function(name) {
                     console.log('adViewWillPresentScreen name=' + name);
@@ -38,8 +44,9 @@ cc.Class({
         }
     },
 
-    show: function(name) {
+    show: function(name, cb) {
         console.log("show admob "+name);
+        this.cb = cb;
         if(cc.sys.isMobile) {
             sdkbox.PluginAdMob.show(name);
         }
