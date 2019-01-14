@@ -1,2 +1,2 @@
-# sdkbox
-sdkbox for cocos creator
+# CocosCreator Framework
+
