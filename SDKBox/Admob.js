@@ -1,19 +1,14 @@
 var bb = require("bb");
 var Admob = {
     init: function() {
+        console.log("bb.Admob init");
         if(cc.sys.isMobile) {
             sdkbox.PluginAdMob.setListener({
                 adViewDidReceiveAd: function(name) {
                     console.log('adViewDidReceiveAd name=' + name);
-                    if(this.cb){
-                        this.cb(true);
-                    }
                 },
                 adViewDidFailToReceiveAdWithError: function(name, msg) {
                     console.log('adViewDidFailToReceiveAdWithError name=' + name + ' msg=' + msg);
-                    if(this.cb){
-                        this.cb(false);
-                    }
                 },
                 adViewWillPresentScreen: function(name) {
                     console.log('adViewWillPresentScreen name=' + name);
@@ -26,6 +21,10 @@ var Admob = {
                 },
                 adViewWillLeaveApplication: function(name) {
                     console.log('adViewWillLeaveApplication=' + name);
+                },
+                reward : function(name, currency, amount){
+                    console.log('reward:'+name+','+currency+','+amount);
+                    //todo reward
                 }
             });
             sdkbox.PluginAdMob.init();
