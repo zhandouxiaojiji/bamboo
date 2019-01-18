@@ -1,13 +1,7 @@
-cc.Class({
-    extends: cc.Component,
-    
-    onLoad: function () {
-        this.admobInit();
-    },
-
-    admobInit: function() {
+var bb = require("bb");
+var Admob = {
+    init: function() {
         if(cc.sys.isMobile) {
-            var self = this
             sdkbox.PluginAdMob.setListener({
                 adViewDidReceiveAd: function(name) {
                     console.log('adViewDidReceiveAd name=' + name);
@@ -51,4 +45,5 @@ cc.Class({
             sdkbox.PluginAdMob.show(name);
         }
     },
-});
+};
+bb.Admob = Admob;
