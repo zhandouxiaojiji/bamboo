@@ -1,5 +1,6 @@
 var bb = require("bb");
 var Admob = {
+    reward_cb: {},
     init: function() {
         console.log("bb.Admob init");
         if(cc.sys.isMobile) {
@@ -24,7 +25,10 @@ var Admob = {
                 },
                 reward : function(name, currency, amount){
                     console.log('reward:'+name+','+currency+','+amount);
-                    //todo reward
+                    var cb = reward_cb[name];
+                    if(cb) {
+                        cb(currency, amount);
+                    }
                 }
             });
             sdkbox.PluginAdMob.init();
@@ -32,17 +36,27 @@ var Admob = {
     },
 
     cache: function(name) {
+        console.cache("cache admob "+name);
         if(cc.sys.isMobile) {
             sdkbox.PluginAdMob.cache(name);
         }
     },
 
-    show: function(name, cb) {
+    show: function(name) {
         console.log("show admob "+name);
-        this.cb = cb;
         if(cc.sys.isMobile) {
             sdkbox.PluginAdMob.show(name);
         }
     },
+
+    reward: function(name, cb){
+        console.log("show reward "+ name);
+        reward_cb[name] = cb;
+        if(cc.sys.isMobile) {
+            sdkbox.PluginAdMob.show(name);
+        }
+    }
+
+
 };
 bb.Admob = Admob;
