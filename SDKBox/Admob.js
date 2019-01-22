@@ -1,12 +1,18 @@
 var bb = require("bb");
 var Admob = {
-    reward_cb: {},
+    loadCallbacks: {},
+    rewardCallbacks: {},
     init: function() {
+        let self = this;
         console.log("bb.Admob init");
         if(cc.sys.isMobile) {
             sdkbox.PluginAdMob.setListener({
                 adViewDidReceiveAd: function(name) {
+                    var cb = self.loadCallbacks[name];
                     console.log('adViewDidReceiveAd name=' + name);
+                    if(cb) {
+                        cb();
+                    }
                 },
                 adViewDidFailToReceiveAdWithError: function(name, msg) {
                     console.log('adViewDidFailToReceiveAdWithError name=' + name + ' msg=' + msg);
@@ -25,7 +31,7 @@ var Admob = {
                 },
                 reward : function(name, currency, amount){
                     console.log('reward:'+name+','+currency+','+amount);
-                    var cb = this.reward_cb[name];
+                    var cb = self.rewardCallbacks[name];
                     if(cb) {
                         cb(currency, amount);
                     }
@@ -36,9 +42,16 @@ var Admob = {
     },
 
     cache: function(name) {
-        console.cache("cache admob "+name);
+        console.log("cache admob "+name);
         if(cc.sys.isMobile) {
             sdkbox.PluginAdMob.cache(name);
+        }
+    },
+
+    hide: function(name) {
+        console.log("hide admob "+name);
+        if(cc.sys.isMobile) {
+            sdkbox.PluginAdMob.hide(name);
         }
     },
 
@@ -51,10 +64,17 @@ var Admob = {
 
     reward: function(name, cb){
         console.log("show reward "+ name);
-        this.reward_cb[name] = cb;
+        this.rewardCallbacks[name] = cb;
         if(cc.sys.isMobile) {
             sdkbox.PluginAdMob.show(name);
         }
+    },
+
+    setLoadCallback: function(name, cb){
+        this.loadCallbacks[name] = cb;
+    },
+    removeLoadCallback: function(name){
+        this.loadCallbacks[name] = null;
     }
 
 
