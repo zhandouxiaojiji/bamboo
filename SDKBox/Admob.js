@@ -25,7 +25,7 @@ var Admob = {
                 },
                 reward : function(name, currency, amount){
                     console.log('reward:'+name+','+currency+','+amount);
-                    var cb = reward_cb[name];
+                    var cb = this.reward_cb[name];
                     if(cb) {
                         cb(currency, amount);
                     }
@@ -51,7 +51,7 @@ var Admob = {
 
     reward: function(name, cb){
         console.log("show reward "+ name);
-        reward_cb[name] = cb;
+        this.reward_cb[name] = cb;
         if(cc.sys.isMobile) {
             sdkbox.PluginAdMob.show(name);
         }
