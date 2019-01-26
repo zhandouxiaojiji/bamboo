@@ -1,7 +1,7 @@
 var bb = require("bb");
 var Language = {
     init: function(){
-        console.log("bb.initLanguage", cc.sys.languageCode, require(cc.sys.languageCode)==undefined);
+        console.log("bb.Language.init", cc.sys.languageCode);
         const i18n = require('LanguageData');
         var code = cc.sys.languageCode;
         //至少需要提供en一种
@@ -21,7 +21,6 @@ var Language = {
                 }else{
                     code = 'en';
                 }
-            
             }else{
                 code = 'en';
             }
