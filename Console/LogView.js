@@ -7,26 +7,12 @@
 // Learn life-cycle callbacks:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] https://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
-
+var bb = require("bb");
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        // foo: {
-        //     // ATTRIBUTES:
-        //     default: null,        // The default value will be used only when the component attaching
-        //                           // to a node for the first time
-        //     type: cc.SpriteFrame, // optional, default is typeof default
-        //     serializable: true,   // optional, default is true
-        // },
-        // bar: {
-        //     get () {
-        //         return this._bar;
-        //     },
-        //     set (value) {
-        //         this._bar = value;
-        //     }
-        // },
+        label: cc.Label
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -34,8 +20,16 @@ cc.Class({
     // onLoad () {},
 
     start () {
-
+        bb.GlobalEvent.on(bb.Console.event.UPDATE_LOG, this.updateLog, this);
     },
+
+    onDestroy(){
+        bb.GlobalEvent.off(bb.Console.event.UPDATE_LOG, this.updateLog, this);
+    },
+
+    updateLog(str){
+        this.label.string = str;
+    }
 
     // update (dt) {},
 });
