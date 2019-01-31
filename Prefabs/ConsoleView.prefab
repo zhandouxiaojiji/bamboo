@@ -84,7 +84,7 @@
   {
     "__type__": "cc.Node",
     "_name": "showBtn",
-    "_objFlags": 0,
+    "_objFlags": 512,
     "_parent": {
       "__id__": 1
     },
@@ -2413,7 +2413,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 1190,
-      "height": 4000
+      "height": 520
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -3860,6 +3860,12 @@
       "__id__": 83
     },
     "_enabled": true,
+    "content": {
+      "__id__": 95
+    },
+    "btnPrefab": {
+      "__uuid__": "c3744950-b53c-4418-86f8-c978315df6f7"
+    },
     "_id": ""
   },
   {
@@ -3957,6 +3963,9 @@
     },
     "customBtn": {
       "__id__": 32
+    },
+    "inputCmd": {
+      "__id__": 46
     },
     "_id": ""
   },

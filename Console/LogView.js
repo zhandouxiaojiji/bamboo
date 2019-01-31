@@ -9,10 +9,11 @@ cc.Class({
 
     // LIFE-CYCLE CALLBACKS:
 
-    // onLoad () {},
+    onLoad () {
+        bb.GlobalEvent.on(bb.Console.event.UPDATE_LOG, this.updateLog, this);
+    },
 
     start () {
-        bb.GlobalEvent.on(bb.Console.event.UPDATE_LOG, this.updateLog, this);
     },
 
     onDestroy(){

@@ -8,12 +8,12 @@ cc.Class({
         btnPrefab: cc.Prefab
     },
 
-
     onLoad () {
         bb.GlobalEvent.on(bb.Console.event.UPDATE_CUSTOM, this.updateCustomList, this);
     },
 
     start () {
+        this.updateCustomList(bb.Console.customs);
     },
 
     onDestroy() {
