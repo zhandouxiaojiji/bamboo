@@ -32,7 +32,7 @@ cc.Class({
     },
 
     onClickRun() {
-        bb.log("run");
+        bb.log("xxx", this.view, null, "ooo");
     }
 
     // update (dt) {},

@@ -5,7 +5,7 @@ var Console = {
     },
     log: "",
     addLog: function(str){
-        this.log = this.log + "\n" + str;
+        this.log = this.log + str + "\n";
         bb.GlobalEvent.dispatch(this.event.UPDATE_LOG, this.log);
     },
     clearLog: function(){

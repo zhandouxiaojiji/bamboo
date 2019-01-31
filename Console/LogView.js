@@ -12,7 +12,8 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        label: cc.Label
+        label: cc.Label,
+        content: cc.Node
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -29,6 +30,8 @@ cc.Class({
 
     updateLog(str){
         this.label.string = str;
+        this.label._updateRenderData(true);
+        this.content.height = this.label.node.height;
     }
 
     // update (dt) {},
