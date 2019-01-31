@@ -1,4 +1,7 @@
 var bb = {
+    init: function(){
+        this.Console.init();
+    },
     log: function(str){
         console.log.apply(console, arguments);
         var str = "";

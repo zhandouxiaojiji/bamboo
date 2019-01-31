@@ -12,7 +12,9 @@ cc.Class({
     // onLoad () {},
 
     start () {
-        this.view.active = false;
+        this.view.active = true;
+        this.view.logView = true;
+        this.view.customView = false;
     },
 
     onClickShowView(){
@@ -22,12 +24,12 @@ cc.Class({
     onClickCustomBtn() {
         if(this.logView.active){
             this.logView.active = false;
-            this.customBtn.active = true;
-            bb.log("show custom view");
+            this.customView.active = true;
+            this.customBtn.node.getChildByName('Label').getComponent(cc.Label).string = "日志";
         }else{
             this.logView.active = true;
-            this.customBtn.active = false;
-            bb.log("show log view");
+            this.customView.active = false;
+            this.customBtn.node.getChildByName('Label').getComponent(cc.Label).string = "常用命令";
         }
     },
 

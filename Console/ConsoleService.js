@@ -6,9 +6,12 @@ var Console = {
     },
     log: "",
     customs: [],
+    cmds: {},
 
     init: function(){
-
+        this.addCustom("测试日志", function(){
+            bb.log("this is a test log");
+        });
     },
 
     addLog: function(str){
@@ -19,11 +22,14 @@ var Console = {
         log = "";
         bb.GlobalEvent.dispatch(this.event.UPDATE_LOG, this.log);
     },
+
     addCustom(name, callback){
+        bb.log("addCustom", name, callback);
         this.customs.push({
             name: name,
             callback: callback
         })
+        bb.GlobalEvent.dispatch(this.event.UPDATE_CUSTOM, this.customs);
     },
     doCustom(name){
         for (const i in this.customs) {
@@ -37,6 +43,13 @@ var Console = {
             bb.log("custom not exist:", name);
         }
         callback.call(callback);
+    },
+
+    addCmd(name, callback){
+        this.cmds[name] = callback;
+    },
+    runCmd(str){
+        
     }
 };
 bb.Console = Console;
