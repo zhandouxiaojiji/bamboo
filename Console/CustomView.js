@@ -14,7 +14,6 @@ cc.Class({
     },
 
     start () {
-        bb.Console.init();
     },
 
     onDestroy() {
@@ -22,7 +21,6 @@ cc.Class({
     },
 
     updateCustomList(customs){
-        bb.log("&&&&&& updateCustomList");
         for (const i in customs) {
             const element = customs[i];
             var node = cc.instantiate(this.btnPrefab);

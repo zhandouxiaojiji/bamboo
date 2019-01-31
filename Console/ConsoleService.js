@@ -12,6 +12,9 @@ var Console = {
         this.addCustom("测试日志", function(){
             bb.log("this is a test log");
         });
+        this.addCmd("testcmd", function(){
+            bb.log("this is a test cmd");
+        })
     },
 
     addLog: function(str){
@@ -24,7 +27,7 @@ var Console = {
     },
 
     addCustom(name, callback){
-        bb.log("addCustom", name, callback);
+        // bb.log("addCustom", name, callback);
         this.customs.push({
             name: name,
             callback: callback
@@ -49,7 +52,15 @@ var Console = {
         this.cmds[name] = callback;
     },
     runCmd(str){
-        
+        console.assert(str);
+        var args = str.split(" ");
+        var callback = this.cmds[args[0]];
+        if(callback){
+            args.shift();
+            callback.apply(callback, args);
+        }else{
+            bb.log("todo send cmd to server");
+        }
     }
 };
 bb.Console = Console;

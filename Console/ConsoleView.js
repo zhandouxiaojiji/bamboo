@@ -7,6 +7,7 @@ cc.Class({
         logView: cc.Node,
         customView: cc.Node,
         customBtn: cc.Button,
+        inputCmd: cc.EditBox,
     },
 
     // onLoad () {},
@@ -15,6 +16,8 @@ cc.Class({
         this.view.active = true;
         this.view.logView = true;
         this.view.customView = false;
+
+        bb.Console.init();
     },
 
     onClickShowView(){
@@ -34,7 +37,8 @@ cc.Class({
     },
 
     onClickRun() {
-        bb.log("xxx", this.view, null, "ooo");
+        bb.log("run cmd", this.inputCmd.string);
+        bb.Console.runCmd(this.inputCmd.string);
     }
 
     // update (dt) {},
