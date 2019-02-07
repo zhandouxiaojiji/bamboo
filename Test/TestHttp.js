@@ -13,7 +13,7 @@ cc.Class({
         bb.Console.addCustom("测试Http", function(){
             bb.log("test http");
             bb.Http.init("http://mini.coding1024.com");
-            bb.Http.post("/api/ping", {}, function(){
+            bb.Http.post("/user/ping", {}, function(){
                 bb.log("callback!!");
             });
         });

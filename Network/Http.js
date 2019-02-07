@@ -12,7 +12,9 @@ var Http = {
             if (xhr.readyState == 4 && (xhr.status >= 200 && xhr.status < 400)) {
                 var response = xhr.responseText;
                 bb.log(response);
-                callback(response, xhr);
+                if(callback){
+                    callback(response, xhr);
+                }
             }
         };
         xhr.send();
@@ -22,14 +24,16 @@ var Http = {
         bb.log("Http post:", api);
         var xhr = new XMLHttpRequest();
         xhr.open("POST", this.host + api, true);
-        xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+        // xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
         xhr.setRequestHeader("Content-type", "application/json");
         xhr.setRequestHeader("Authorization", "aaa");
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && (xhr.status >= 200 && xhr.status < 400)) {
                 var response = xhr.responseText;
                 bb.log(response);
-                callback(response, xhr);
+                if(callback){
+                    callback(response, xhr);
+                }
             }
         };
         xhr.send(data);
