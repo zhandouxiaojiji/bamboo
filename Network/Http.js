@@ -1,10 +1,15 @@
 var bb = require("bb");
 var Http = {
-    host: "127.0.0.1",
+    host: null,
+    authorization: null,
     init: function(host){
         this.host = host;
     },
     get: function(api, callback){
+        if(!this.host){
+            bb.log("host not init");
+            return;
+        }
         bb.log("Http get", api);
         var xhr = new XMLHttpRequest();
         xhr.open("GET", this.host + api, true);
@@ -21,12 +26,16 @@ var Http = {
         return xhr;
     },
     post: function(api, data, callback){
+        if(!this.host){
+            bb.log("host not init");
+            return;
+        }
         bb.log("Http post:", api);
         var xhr = new XMLHttpRequest();
         xhr.open("POST", this.host + api, true);
         // xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
         xhr.setRequestHeader("Content-type", "application/json");
-        xhr.setRequestHeader("Authorization", "aaa");
+        xhr.setRequestHeader("Authorization", this.authorization || '');
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && (xhr.status >= 200 && xhr.status < 400)) {
                 var response = xhr.responseText;
@@ -34,9 +43,11 @@ var Http = {
                 if(callback){
                     callback(response, xhr);
                 }
+            } else {
+                bb.log("Network error", xhr.readyState, xhr.status);
             }
         };
-        xhr.send(data);
+        xhr.send(JSON.stringify(data));
         return xhr;
     }
 };
