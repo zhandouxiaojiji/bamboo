@@ -15,7 +15,7 @@ var Http = {
         xhr.open("GET", this.host + api, true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && (xhr.status >= 200 && xhr.status < 400)) {
-                var response = xhr.responseText;
+                var response =  JSON.parse(xhr.responseText);
                 bb.log(response);
                 if(callback){
                     callback(response, xhr);
@@ -33,12 +33,11 @@ var Http = {
         bb.log("Http post:", api);
         var xhr = new XMLHttpRequest();
         xhr.open("POST", this.host + api, true);
-        // xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
         xhr.setRequestHeader("Content-type", "application/json");
         xhr.setRequestHeader("Authorization", this.authorization || '');
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && (xhr.status >= 200 && xhr.status < 400)) {
-                var response = xhr.responseText;
+                var response = JSON.parse(xhr.responseText);
                 bb.log(response);
                 if(callback){
                     callback(response, xhr);
