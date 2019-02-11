@@ -1,5 +1,5 @@
 var bb = require("bb");
-var Admob = {
+bb.Admob = {
     loadCallbacks: {},
     rewardCallbacks: {},
     init: function() {
@@ -79,4 +79,3 @@ var Admob = {
 
 
 };
-bb.Admob = Admob;

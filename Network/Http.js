@@ -1,5 +1,5 @@
 var bb = require("bb");
-var Http = {
+bb.Http = {
     host: null,
     authorization: null,
     init: function(host){
@@ -50,4 +50,3 @@ var Http = {
         return xhr;
     }
 };
-bb.Http = Http;

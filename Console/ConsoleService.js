@@ -1,5 +1,5 @@
 var bb = require("bb");
-var Console = {
+bb.Console = {
     event: {
         UPDATE_LOG: "UPDATE_LOG",
         UPDATE_CUSTOM: "UPDATE_CUSTOM"
@@ -63,4 +63,3 @@ var Console = {
         }
     }
 };
-bb.Console = Console;
