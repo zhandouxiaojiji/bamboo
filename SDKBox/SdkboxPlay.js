@@ -9,6 +9,12 @@ bb.SdkboxPlay = {
         }
         sdkbox.PluginSdkboxPlay.init();
     },
+    getInfo(field){
+        if(!cc.sys.isMobile){
+            return;
+        }
+        return sdkbox.PluginSdkboxPlay.getPlayerAccountField(field);
+    },
     signin(){
         if(!cc.sys.isMobile){
             bb.log("not mobile platform");
@@ -19,16 +25,15 @@ bb.SdkboxPlay = {
             onConnectionStatusChanged: function(status){
                 bb.log("onConnectionStatusChanged", status);
                 bb.log("isSignin", sdkbox.PluginSdkboxPlay.isSignedIn());
-                bb.log("name", this.getInfo("name"));
-                bb.GlobalEvent.dispatch(this.event.CON_STATUS, status);
+                bb.log("name", bb.SdkboxPlay.getInfo("name"));
+                bb.log("server_auth_code", bb.SdkboxPlay.getInfo("server_auth_code"));
+                var data = sdkbox.PluginSdkboxPlay.loadAllGameData()
+                for(var k in data){
+                    bb.log("k", k, "v", data[k]);
+                }
+                bb.GlobalEvent.dispatch(bb.SdkboxPlay.event.CON_STATUS, status);
             }
         })
-    },
-    getInfo(field){
-        if(!cc.sys.isMobile){
-            return;
-        }
-        return sdkbox.PluginSdkboxPlay.getPlayerAccountField(field);
     },
     isSignin(){
         if(!cc.sys.isMobile){
