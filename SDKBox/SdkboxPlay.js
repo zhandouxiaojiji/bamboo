@@ -26,11 +26,8 @@ bb.SdkboxPlay = {
                 bb.log("onConnectionStatusChanged", status);
                 bb.log("isSignin", sdkbox.PluginSdkboxPlay.isSignedIn());
                 bb.log("name", bb.SdkboxPlay.getInfo("name"));
-                bb.log("server_auth_code", bb.SdkboxPlay.getInfo("server_auth_code"));
-                var data = sdkbox.PluginSdkboxPlay.loadAllGameData()
-                for(var k in data){
-                    bb.log("k", k, "v", data[k]);
-                }
+                bb.log("display_name", bb.SdkboxPlay.getInfo("display_name"));
+                bb.log("player_id", bb.SdkboxPlay.getInfo("player_id"));
                 bb.GlobalEvent.dispatch(bb.SdkboxPlay.event.CON_STATUS, status);
             }
         })

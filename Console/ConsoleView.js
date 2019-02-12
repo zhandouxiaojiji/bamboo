@@ -13,7 +13,7 @@ cc.Class({
     // onLoad () {},
 
     start () {
-        this.view.active = true;
+        this.view.active = false;
         this.view.logView = true;
         this.view.customView = false;
 

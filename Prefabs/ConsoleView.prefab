@@ -13,7 +13,7 @@
   {
     "__type__": "cc.Node",
     "_name": "ConsoleView",
-    "_objFlags": 0,
+    "_objFlags": 512,
     "_parent": null,
     "_children": [
       {
@@ -456,7 +456,7 @@
         "__id__": 83
       }
     ],
-    "_active": true,
+    "_active": false,
     "_level": 3,
     "_components": [
       {
@@ -532,7 +532,7 @@
     "_prefab": {
       "__id__": 16
     },
-    "_opacity": 100,
+    "_opacity": 200,
     "_color": {
       "__type__": "cc.Color",
       "r": 255,

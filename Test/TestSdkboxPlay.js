@@ -10,6 +10,7 @@ cc.Class({
     // onLoad () {},
     onConnect(status){
         bb.log("on connect !!!", status);
+        
     },
     testUser() {
         bb.Console.addCustom("SdkboxPlay", function(){
