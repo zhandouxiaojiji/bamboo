@@ -1,6 +1,6 @@
 var bb = require("bb");
 bb.SdkboxPlay = {
-    event: {
+    EventType: {
         CON_STATUS: "CON_STATUS"
     },
     init(){
@@ -28,7 +28,7 @@ bb.SdkboxPlay = {
                 bb.log("name", bb.SdkboxPlay.getInfo("name"));
                 bb.log("display_name", bb.SdkboxPlay.getInfo("display_name"));
                 bb.log("player_id", bb.SdkboxPlay.getInfo("player_id"));
-                bb.GlobalEvent.dispatch(bb.SdkboxPlay.event.CON_STATUS, status);
+                bb.dispatch(bb.SdkboxPlay.EventType.CON_STATUS, status);
             }
         })
     },

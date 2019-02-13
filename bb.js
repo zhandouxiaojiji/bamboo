@@ -1,5 +1,5 @@
 var bb = {
-    log: function(str){
+    log(str){
         console.log.apply(console, arguments);
         var str = "";
         for(var i = 0; i < arguments.length; i++){
@@ -10,6 +10,15 @@ var bb = {
             }
         }
         this.Console.addLog(str);
+    },
+    on(){
+        this.GlobalEvent.on.apply(this.GlobalEvent, arguments);
+    },
+    off(){
+        this.GlobalEvent.off.apply(this.GlobalEvent, arguments);
+    },
+    dispatch(){
+        this.GlobalEvent.dispatch.apply(this.GlobalEvent, arguments);
     }
 };
 module.exports = bb;

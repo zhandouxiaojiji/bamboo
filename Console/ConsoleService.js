@@ -1,6 +1,6 @@
 var bb = require("bb");
 bb.Console = {
-    event: {
+    EventType: {
         UPDATE_LOG: "UPDATE_LOG",
         UPDATE_CUSTOM: "UPDATE_CUSTOM"
     },
@@ -19,11 +19,11 @@ bb.Console = {
 
     addLog: function(str){
         this.log = this.log + str + "\n";
-        bb.GlobalEvent.dispatch(this.event.UPDATE_LOG, this.log);
+        bb.dispatch(this.EventType.UPDATE_LOG, this.log);
     },
     clearLog: function(){
         log = "";
-        bb.GlobalEvent.dispatch(this.event.UPDATE_LOG, this.log);
+        bb.dispatch(this.EventType.UPDATE_LOG, this.log);
     },
 
     addCustom(name, callback){
@@ -32,7 +32,7 @@ bb.Console = {
             name: name,
             callback: callback
         })
-        bb.GlobalEvent.dispatch(this.event.UPDATE_CUSTOM, this.customs);
+        bb.dispatch(this.EventType.UPDATE_CUSTOM, this.customs);
     },
     doCustom(name){
         for (const i in this.customs) {

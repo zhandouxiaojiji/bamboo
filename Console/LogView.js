@@ -10,14 +10,14 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        bb.GlobalEvent.on(bb.Console.event.UPDATE_LOG, this.updateLog, this);
+        bb.on(bb.Console.EventType.UPDATE_LOG, this.updateLog, this);
     },
 
     start () {
     },
 
     onDestroy(){
-        bb.GlobalEvent.off(bb.Console.event.UPDATE_LOG, this.updateLog, this);
+        bb.off(bb.Console.EventType.UPDATE_LOG, this.updateLog, this);
     },
 
     updateLog(str){

@@ -21,12 +21,12 @@ cc.Class({
 
 
     start () {
-        bb.GlobalEvent.on(bb.SdkboxPlay.event.CON_STATUS, this.onConnect, this);
+        bb.on(bb.SdkboxPlay.EventType.CON_STATUS, this.onConnect, this);
         this.testUser();
     },
 
     onDestroy(){
-        bb.GlobalEvent.off(bb.SdkboxPlay.event.CON_STATUS, this.onConnect, this)
+        bb.off(bb.SdkboxPlay.EventType.CON_STATUS, this.onConnect, this)
     }
 
     // update (dt) {},

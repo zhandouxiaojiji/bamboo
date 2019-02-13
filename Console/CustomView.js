@@ -9,7 +9,7 @@ cc.Class({
     },
 
     onLoad () {
-        bb.GlobalEvent.on(bb.Console.event.UPDATE_CUSTOM, this.updateCustomList, this);
+        bb.on(bb.Console.EventType.UPDATE_CUSTOM, this.updateCustomList, this);
     },
 
     start () {
@@ -17,7 +17,7 @@ cc.Class({
     },
 
     onDestroy() {
-        bb.GlobalEvent.off(bb.Console.event.UPDATE_CUSTOM, this.updateCustomList, this);
+        bb.off(bb.Console.EventType.UPDATE_CUSTOM, this.updateCustomList, this);
     },
 
     updateCustomList(customs){
