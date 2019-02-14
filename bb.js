@@ -1,4 +1,4 @@
-var bb = {
+module.exports = {
     log(str){
         console.log.apply(console, arguments);
         var str = "";
@@ -21,4 +21,3 @@ var bb = {
         this.GlobalEvent.dispatch.apply(this.GlobalEvent, arguments);
     }
 };
-module.exports = bb;
