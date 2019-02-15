@@ -1795,7 +1795,7 @@
       "b": 187,
       "a": 255
     },
-    "_N$maxLength": 8,
+    "_N$maxLength": 100,
     "_N$stayOnTop": false,
     "_id": ""
   },
