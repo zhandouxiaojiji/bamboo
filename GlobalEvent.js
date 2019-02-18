@@ -7,6 +7,7 @@ var GlobalEvent = {
         var returns = []; //返回值
 
         var name = arguments[0];
+        console.assert(name);
 
         for (var findEvenName in this.handles_)
         {
@@ -27,6 +28,7 @@ var GlobalEvent = {
     //添加普通事件
     on: function (eventNames, callback, target)
     {
+        console.assert(eventNames);
         if (Array.isArray(eventNames) == false) {
             eventNames = [eventNames];
         }
@@ -46,7 +48,7 @@ var GlobalEvent = {
     //通过事件名和target移除一个监听器
     off: function (eventNames, callback, target)
     {
-
+        console.assert(eventNames);
         if (target == undefined)
         {
             target = callback;
