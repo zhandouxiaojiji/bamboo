@@ -13,7 +13,6 @@ bb.Local = {
         bb.dispatch(bb.Local.EventType.LOCAL_SEND, op, data);
     },
     recv(op, data){
-        console.assert(op);
         bb.dispatch(op, data);
         if(this.callbacks[op]){
             this.callbacks[op](data);
