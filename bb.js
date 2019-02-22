@@ -19,5 +19,16 @@ module.exports = {
     },
     dispatch(){
         this.GlobalEvent.dispatch.apply(this.GlobalEvent, arguments);
+    },
+    getData(k, defaultValue){
+        var v = cc.sys.localStorage.getItem(k);
+        if(!v){
+            cc.sys.localStorage.setItem(k, defaultValue);
+            return defaultValue;
+        }
+        return v;
+    },
+    setData(k, v){
+        cc.sys.localStorage.setItem(k, v);
     }
 };
