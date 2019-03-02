@@ -7,13 +7,21 @@ bb.Console = {
     log: "",
     customs: [],
     cmds: {},
+    serverConf: {},
 
     init: function(){
-        this.addCustom("测试日志", function(){
+        var self = this;
+        self.addCustom("测试日志", function(){
             bb.log("this is a test log");
         });
-        this.addCmd("testcmd", function(){
+        self.addCmd("testcmd", function(){
             bb.log("this is a test cmd");
+        })
+        self.addCmd("server", function(name){
+            var host = self.serverConf[name];
+            if(host){
+                bb.Http.setHost(host);
+            }
         })
     },
 
@@ -61,5 +69,8 @@ bb.Console = {
         }else{
             bb.log("todo send cmd to server");
         }
-    }
+    },
+    setServerConf(conf){
+        this.serverConf = conf;
+    },
 };

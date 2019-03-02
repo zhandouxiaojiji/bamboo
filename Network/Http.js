@@ -2,10 +2,20 @@ var bb = require("bb");
 bb.Http = {
     host: null,
     authorization: null,
-    init: function(host){
-        this.host = host;
+    init(host){
+        var localHost = bb.getData("host");
+        if(localHost){
+            this.host = localHost;
+        }else{
+            this.host = host;
+        }
     },
-    get: function(api, callback){
+    setHost(host){
+        this.host = host;
+        bb.setData("host", host);
+        bb.log("Http setHost:", host);
+    },
+    get(api, callback){
         if(!this.host){
             bb.log("host not init");
             return;
@@ -25,7 +35,7 @@ bb.Http = {
         xhr.send();
         return xhr;
     },
-    post: function(api, data, callback){
+    post(api, data, callback){
         if(!this.host){
             bb.log("host not init");
             return;
