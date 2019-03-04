@@ -1,4 +1,8 @@
 module.exports = {
+    EventType: {
+        NOTIFY: "NOTIFY",
+    },
+
     log(str){
         console.log.apply(console, arguments);
         var str = "";
@@ -35,6 +39,10 @@ module.exports = {
     },
 
     open(viewPrefab){
-        cc.instantiate(viewPrefab).parent = cc.director.getScene();
+        cc.instantiate(viewPrefab).parent = cc.find("Canvas");
     },
+
+    notify(msg){
+        this.dispatch(this.EventType.NOTIFY, msg); 
+    }
 };
