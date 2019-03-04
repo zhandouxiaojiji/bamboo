@@ -11,6 +11,7 @@ module.exports = {
         }
         this.Console.addLog(str);
     },
+
     on(){
         this.GlobalEvent.on.apply(this.GlobalEvent, arguments);
     },
@@ -20,6 +21,7 @@ module.exports = {
     dispatch(){
         this.GlobalEvent.dispatch.apply(this.GlobalEvent, arguments);
     },
+
     getData(k, defaultValue){
         var v = cc.sys.localStorage.getItem(k);
         if(!v){
@@ -30,5 +32,9 @@ module.exports = {
     },
     setData(k, v){
         cc.sys.localStorage.setItem(k, v);
-    }
+    },
+
+    open(viewPrefab){
+        cc.instantiate(viewPrefab).parent = cc.director.getScene();
+    },
 };

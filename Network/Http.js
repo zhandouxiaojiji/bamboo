@@ -1,7 +1,7 @@
 var bb = require("bb");
 bb.Http = {
     host: null,
-    authorization: null,
+    authorization: "",
     init(host){
         var localHost = bb.getData("host");
         if(localHost){
@@ -44,7 +44,7 @@ bb.Http = {
         var xhr = new XMLHttpRequest();
         xhr.open("POST", this.host + api, true);
         xhr.setRequestHeader("Content-type", "application/json");
-        xhr.setRequestHeader("Authorization", this.authorization || '');
+        xhr.setRequestHeader("Authorization", this.authorization);
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && (xhr.status >= 200 && xhr.status < 400)) {
                 var response = JSON.parse(xhr.responseText);

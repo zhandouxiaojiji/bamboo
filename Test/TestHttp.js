@@ -21,7 +21,7 @@ cc.Class({
     testSignIn() {
         bb.Console.addCustom("测试登陆", function() {
             bb.log("test signin")
-            bb.Http.init("http://mini.coding1024.com");
+            bb.Http.init("https://coding1024.com");
             bb.Http.post("/user/sign_in", {
                 acc: "test"
             }, function(data) {
