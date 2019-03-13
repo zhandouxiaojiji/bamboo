@@ -7,29 +7,29 @@ bb.Admob = {
         console.log("bb.Admob init");
         if(cc.sys.isMobile) {
             sdkbox.PluginAdMob.setListener({
-                adViewDidReceiveAd: function(name) {
+                adViewDidReceiveAd: (name) => {
                     var cb = self.loadCallbacks[name];
                     console.log('adViewDidReceiveAd name=' + name);
                     if(cb) {
                         cb();
                     }
                 },
-                adViewDidFailToReceiveAdWithError: function(name, msg) {
+                adViewDidFailToReceiveAdWithError: (name, msg) => {
                     console.log('adViewDidFailToReceiveAdWithError name=' + name + ' msg=' + msg);
                 },
-                adViewWillPresentScreen: function(name) {
+                adViewWillPresentScreen: (name) => {
                     console.log('adViewWillPresentScreen name=' + name);
                 },
-                adViewDidDismissScreen: function(name) {
+                adViewDidDismissScreen: (name) => {
                     console.log('adViewDidDismissScreen name=' + name);
                 },
-                adViewWillDismissScreen: function(name) {
+                adViewWillDismissScreen: (name) => {
                     console.log('adViewWillDismissScreen=' + name);
                 },
-                adViewWillLeaveApplication: function(name) {
+                adViewWillLeaveApplication: (name) => {
                     console.log('adViewWillLeaveApplication=' + name);
                 },
-                reward : function(name, currency, amount){
+                reward : (name, currency, amount) => {
                     console.log('reward:'+name+','+currency+','+amount);
                     var cb = self.rewardCallbacks[name];
                     if(cb) {

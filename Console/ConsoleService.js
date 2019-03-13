@@ -10,15 +10,14 @@ bb.Console = {
     serverConf: {},
 
     init: function(){
-        var self = this;
-        self.addCustom("测试日志", function(){
+        this.addCustom("测试日志", () => {
             bb.log("this is a test log");
         });
-        self.addCmd("testcmd", function(){
+        this.addCmd("testcmd", () => {
             bb.log("this is a test cmd");
         })
-        self.addCmd("server", function(name){
-            var host = self.serverConf[name];
+        this.addCmd("server", (name) => {
+            var host = this.serverConf[name];
             if(host){
                 bb.Http.setHost(host);
             }

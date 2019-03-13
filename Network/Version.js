@@ -6,7 +6,6 @@ bb.Version = {
         var arr = str.split('.');
         var num = 0;
         for(var i = 0; i < arr.length; i ++){
-            bb.log(Math.pow(OFFSET, arr.length - i));
             num = num + Math.pow(OFFSET, arr.length - i - 1) * arr[i];
         }
         return num;
@@ -16,5 +15,10 @@ bb.Version = {
         var b = Math.floor(num%(OFFSET*OFFSET)/OFFSET);
         var c = num%OFFSET;
         return  `${a}.${b}.${c}`;
-    }
+    },
+    isCompatible(v1, v2){
+        var num1 = this.tonumber(v1);
+        var num2 = this.tonumber(v2);
+        return Math.floor(num1/OFFSET) == Math.floor(num2/OFFSET);
+    },
 };

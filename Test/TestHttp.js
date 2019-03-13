@@ -36,6 +36,8 @@ cc.Class({
             bb.log(`version num ${num}`);
             var str = bb.Version.tostring(num);
             bb.log(`version str ${str}`);
+            bb.log(`check version ${bb.Version.isCompatible("1.1.0", "1.1.1")}`);
+            bb.log(`check version ${bb.Version.isCompatible("1.1.0", "1.2.0")}`);
         });
     },
 
