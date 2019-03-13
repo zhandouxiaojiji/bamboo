@@ -16,7 +16,7 @@ bb.Version = {
         var c = num%OFFSET;
         return  `${a}.${b}.${c}`;
     },
-    isCompatible(v1, v2){
+    isLegal(v1, v2){
         var num1 = this.tonumber(v1);
         var num2 = this.tonumber(v2);
         return Math.floor(num1/OFFSET) == Math.floor(num2/OFFSET);
