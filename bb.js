@@ -28,7 +28,7 @@ module.exports = {
 
     getData(k, defaultValue){
         var v = cc.sys.localStorage.getItem(k);
-        if(!v){
+        if(typeof(v) == "null" || typeof(v) == "undefined" || v == "undefined"){
             cc.sys.localStorage.setItem(k, defaultValue);
             return defaultValue;
         }

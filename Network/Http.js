@@ -3,12 +3,8 @@ bb.Http = {
     host: null,
     authorization: "",
     init(host) {
-        var localHost = bb.getData("host");
-        if (localHost) {
-            this.host = localHost;
-        } else {
-            this.host = host;
-        }
+        this.host = bb.getData("host", host);
+        bb.log("init host:", this.host);
     },
     setHost(host) {
         this.host = host;
