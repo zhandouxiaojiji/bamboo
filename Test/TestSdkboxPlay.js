@@ -8,24 +8,24 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     // onLoad () {},
-    onConnect(status){
+    onConnect(status) {
         bb.log("on connect !!!", status);
-        
+
     },
     testUser() {
-        bb.Console.addCustom("SdkboxPlay", function(){
+        bb.Console.addCustom("SdkboxPlay", function () {
             bb.SdkboxPlay.init();
             bb.SdkboxPlay.signin();
         });
     },
 
 
-    start () {
+    start() {
         bb.on(bb.SdkboxPlay.EventType.CON_STATUS, this.onConnect, this);
         this.testUser();
     },
 
-    onDestroy(){
+    onDestroy() {
         bb.off(bb.SdkboxPlay.EventType.CON_STATUS, this.onConnect, this)
     }
 

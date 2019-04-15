@@ -9,8 +9,8 @@ cc.Class({
 
     // onLoad () {},
 
-    start () {
-        bb.Console.addCustom("测试字符串", function(){
+    start() {
+        bb.Console.addCustom("测试字符串", function () {
             bb.log("test string");
             var str = "aa bb cc";
             bb.log(str.split(" "));

@@ -41,7 +41,7 @@ cc.Class({
         });
     },
 
-    start () {
+    start() {
         this.testPing();
         this.testSignIn();
         this.testVersion();

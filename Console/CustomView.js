@@ -8,11 +8,11 @@ cc.Class({
         btnPrefab: cc.Prefab
     },
 
-    onLoad () {
+    onLoad() {
         bb.on(bb.Console.EventType.UPDATE_CUSTOM, this.updateCustomList, this);
     },
 
-    start () {
+    start() {
         this.updateCustomList(bb.Console.customs);
     },
 
@@ -20,7 +20,7 @@ cc.Class({
         bb.off(bb.Console.EventType.UPDATE_CUSTOM, this.updateCustomList, this);
     },
 
-    updateCustomList(customs){
+    updateCustomList(customs) {
         for (const i in customs) {
             const element = customs[i];
             var node = cc.instantiate(this.btnPrefab);

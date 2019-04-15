@@ -10,11 +10,11 @@ cc.Class({
 
     // onLoad () {},
 
-    start () {
+    start() {
 
     },
 
-    onClickClose(){
+    onClickClose() {
         this.node.active = false;
     }
 
