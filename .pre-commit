@@ -1,5 +1,11 @@
 #!/bin/sh
 echo -e "\nValidating Javascript:\n"
+STAGED_FILES=$(git status -s | grep "[M|A|??].*js$" | awk '{printf $2 " "}')
+
+if [[ "$STAGED_FILES" = "" ]]; then
+    exit 0
+fi
+
 # Check for eslint
 which eslint &> /dev/null
 if [[ "$?" == 1 ]]; then
@@ -7,7 +13,7 @@ if [[ "$?" == 1 ]]; then
   exit 1
 fi
 
-eslint ./assets
+eslint $STAGED_FILES
 if [[ "$?" == 1 ]]; then
   echo -e "\033[41mCOMMIT FAILED:\033[0m Your commit contains files that should pass ESLint but do not. Please fix the ESLint errors and try again.\n"
   exit 1
