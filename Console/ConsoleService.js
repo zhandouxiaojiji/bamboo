@@ -9,7 +9,7 @@ bb.Console = {
     cmds: {},
     serverConf: {},
 
-    init: function () {
+    init() {
         this.addCustom("测试日志", () => {
             bb.log("this is a test log");
         });
@@ -24,11 +24,11 @@ bb.Console = {
         })
     },
 
-    addLog: function (str) {
+    addLog(str) {
         this.log = this.log + str + "\n";
         bb.dispatch(this.EventType.UPDATE_LOG, this.log);
     },
-    clearLog: function () {
+    clearLog() {
         this.log = "";
         bb.dispatch(this.EventType.UPDATE_LOG, this.log);
     },
