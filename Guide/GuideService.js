@@ -6,7 +6,7 @@ bb.Guide = {
     guides: {},
     init(data) {
         for (let type in data) {
-            self.guides[type] = data[type];
+            this.guides[type] = data[type];
         }
     },
 
