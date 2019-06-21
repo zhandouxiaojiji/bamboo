@@ -1,6 +1,7 @@
 module.exports = {
     EventType: {
         NOTIFY: "NOTIFY",
+        DIALOG: "DIALOG",
     },
 
     log() {
@@ -41,8 +42,10 @@ module.exports = {
     open(viewPrefab) {
         cc.instantiate(viewPrefab).parent = cc.find("Canvas");
     },
-
     notify(msg) {
         this.dispatch(this.EventType.NOTIFY, msg);
+    },
+    dialog(title, content, ok, cancel){
+        this.dispatch(title, content, ok, cancel);
     }
 };
