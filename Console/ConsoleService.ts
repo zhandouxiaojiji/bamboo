@@ -50,7 +50,7 @@ class ConsoleService {
         callback.call(callback);
     };
 
-    addCmd(name: string, callback: () => void) {
+    addCmd(name: string, callback: (...args: any) => void) {
         this.cmds[name] = callback;
     };
     runCmd(str: string) {

@@ -4,11 +4,11 @@ class Local {
         LOCAL_RECV: "LOCAL_RECV"
     };
     callbacks: {};
-    call(op: number, data: any, callback: () => void) {
+    call(op: number, data?: any, callback?: () => void) {
         this.callbacks[op + 1] = callback;
         this.send(op, data);
     };
-    send(op: number, data: any) {
+    send(op: number, data?: any) {
         bb.dispatch(this.EventType.LOCAL_SEND, op, data);
     };
     recv(op: number, data: any) {

@@ -1,4 +1,3 @@
-
 class Http {
     host: string;
     authorization: string;
@@ -11,7 +10,7 @@ class Http {
         bb.setData("host", host);
         bb.log("Http setHost:", host);
     };
-    get(api: string, cb: (response: string, xhr: XMLHttpRequest) => void, err_cb?: (xhr: XMLHttpRequest) => void) {
+    get(api: string, cb?: (response: string, xhr: XMLHttpRequest) => void, err_cb?: (xhr: XMLHttpRequest) => void) {
         if (!this.host) {
             bb.log("host not init");
             return;
@@ -35,7 +34,7 @@ class Http {
         xhr.send();
         return xhr;
     };
-    post(api: string, data: any, cb: (response: any, xhr: XMLHttpRequest) => void, err_cb?: (xhr: XMLHttpRequest) => void) {
+    post(api: string, data: any, cb?: (response: any, xhr: XMLHttpRequest) => void, err_cb?: (xhr: XMLHttpRequest) => void) {
         if (!this.host) {
             bb.log("host not init");
             return;

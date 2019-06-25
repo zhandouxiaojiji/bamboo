@@ -11,7 +11,7 @@ declare namespace bb {
     export function off(...args: any): void;
     export function dispatch(...args: any): void;
 
-    export function getData(k: string, defaultValue: string): string;
+    export function getData(k: string, defaultValue?: string): string;
     export function setData(k: string, v: string): string;
 
     export function open(viewPrefab: cc.Prefab): void;

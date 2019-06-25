@@ -19,17 +19,17 @@ function log(...args: any) {
     Console.addLog(s);
 }
 
-function on(...args) {
+function on(...args: any) {
     GlobalEvent.on.apply(GlobalEvent, ...args);
 }
-function off(...args) {
+function off(...args: any) {
     GlobalEvent.off.apply(GlobalEvent, ...args);
 }
-function dispatch(...args) {
+function dispatch(...args: any) {
     GlobalEvent.dispatch.apply(GlobalEvent, ...args);
 }
 
-function getData(k: string, defaultValue: string) {
+function getData(k: string, defaultValue?: string) {
     var v = cc.sys.localStorage.getItem(k);
     if (!v || typeof (v) == "undefined" || v == "undefined") {
         cc.sys.localStorage.setItem(k, defaultValue);
