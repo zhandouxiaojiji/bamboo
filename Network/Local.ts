@@ -5,7 +5,7 @@ class Local {
         LOCAL_SEND: "LOCAL_SEND",
         LOCAL_RECV: "LOCAL_RECV"
     };
-    callbacks: {};
+    callbacks = {};
     call(op: number, data?: any, callback?: () => void) {
         this.callbacks[op + 1] = callback;
         this.send(op, data);
