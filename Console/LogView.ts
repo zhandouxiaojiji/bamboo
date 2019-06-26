@@ -1,4 +1,5 @@
 import Console from "./ConsoleService";
+import bb from "../bb";
 
 const { ccclass, property } = cc._decorator;
 @ccclass
@@ -28,4 +29,4 @@ export default class LogView extends cc.Component {
     };
 
     // update (dt) {},
-});
+};

@@ -1,5 +1,6 @@
 import bbNotify from "./bbNotify";
 import bbDialog from "./bbDialog";
+import bb from "../bb";
 
 const { ccclass, property } = cc._decorator;
 @ccclass

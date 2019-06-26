@@ -1,3 +1,5 @@
+import bb from "../bb";
+
 class Http {
     host: string;
     authorization: string;

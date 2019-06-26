@@ -2,17 +2,17 @@
 class GlobalEvent {
     handles = {};
     //发送事件
-    dispatch() {
+    dispatch(...args: any) {
         var returns = []; //返回值
 
-        var name = arguments[0];
+        var name = args[0];
         // console.assert(name);
 
         for (var findEvenName in this.handles) {
             if (findEvenName == name) {
                 for (var i = 0; i < this.handles[name].length; i++) {
                     var handler = this.handles[name][i]
-                    var args = Array.prototype.slice.call(arguments);
+                    var args = Array.prototype.slice.call(args);
                     args.shift();
                     var returnValue = handler.callback.apply(handler.target, args);
                     returns.push(returnValue);
@@ -40,7 +40,7 @@ class GlobalEvent {
     };
 
     //通过事件名和target移除一个监听器
-    off(eventNames: any, callback: () => void, target: an) {
+    off(eventNames: any, callback: () => void, target: any) {
         if (target == undefined) {
             target = callback;
             callback = undefined;

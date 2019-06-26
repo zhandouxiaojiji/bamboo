@@ -1,3 +1,4 @@
+import bb from "../bb";
 
 class SdkboxPlay {
     EventType = {

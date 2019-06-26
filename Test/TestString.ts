@@ -1,4 +1,5 @@
 import Console from "../Console/ConsoleService";
+import bb from "../bb";
 
 const { ccclass, property } = cc._decorator;
 @ccclass

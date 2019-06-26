@@ -1,5 +1,6 @@
 import Console from "../Console/ConsoleService";
 import SdkboxPlay from "../SDKBox/SdkboxPlay";
+import bb from "../bb";
 
 const { ccclass, property } = cc._decorator;
 @ccclass

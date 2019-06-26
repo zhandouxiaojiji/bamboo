@@ -1,3 +1,5 @@
+import bb from "../bb";
+
 class Local {
     EventType = {
         LOCAL_SEND: "LOCAL_SEND",

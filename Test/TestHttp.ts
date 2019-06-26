@@ -1,6 +1,7 @@
 import Console from "../Console/ConsoleService";
 import Version from "../Network/Version";
 import Http from "../Network/Http";
+import bb from "../bb";
 
 const { ccclass, property } = cc._decorator;
 @ccclass
