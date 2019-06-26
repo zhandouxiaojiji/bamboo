@@ -19,17 +19,17 @@ export default {
         }
         Console.addLog(s);
     },
-    
-    on(eventNames: any, callback: () => void, target: any) {
+
+    on(eventNames: any, callback: (...args: any) => void, target?: any) {
         GlobalEvent.on(eventNames, callback, target);
     },
-    off(eventNames: any, callback: () => void, target: any) {
+    off(eventNames: any, callback: (...args: any) => void, target?: any) {
         GlobalEvent.off(eventNames, callback, target);
     },
     dispatch(eventNames: any, ...args: any) {
         GlobalEvent.dispatch(eventNames, ...args);
     },
-    
+
     getData(k: string, defaultValue?: string) {
         var v = cc.sys.localStorage.getItem(k);
         if (!v || typeof (v) == "undefined" || v == "undefined") {
@@ -41,7 +41,7 @@ export default {
     setData(k: string, v: string) {
         cc.sys.localStorage.setItem(k, v);
     },
-    
+
     open(viewPrefab: cc.Prefab) {
         cc.instantiate(viewPrefab).parent = cc.find("Canvas");
     },

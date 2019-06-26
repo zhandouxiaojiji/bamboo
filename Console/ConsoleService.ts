@@ -7,9 +7,9 @@ class ConsoleService {
         UPDATE_CUSTOM: "UPDATE_CUSTOM"
     };
     log: string;
-    customs: [{ name: string, callback: () => void }];
-    cmds: {};
-    serverConf: {};
+    customs: any = [];
+    cmds = {};
+    serverConf = {};
 
     init() {
         this.addCustom("测试日志", () => {
