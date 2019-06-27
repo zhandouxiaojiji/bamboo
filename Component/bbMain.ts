@@ -6,9 +6,9 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class bbMain extends cc.Component {
     @property(cc.Prefab)
-    notifyPrefab: cc.Prefab;
+    notifyPrefab: cc.Prefab = null;
     @property(cc.Prefab)
-    dialogPrefab: cc.Prefab;
+    dialogPrefab: cc.Prefab = null;
 
     notify: bbNotify;
     dialog: bbDialog;

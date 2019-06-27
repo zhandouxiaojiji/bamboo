@@ -5,15 +5,15 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class ConsoleView extends cc.Component {
     @property(cc.Node)
-    view: cc.Node;
+    view: cc.Node = null;
     @property(cc.Node)
-    logView: cc.Node;
+    logView: cc.Node = null;
     @property(cc.Node)
-    customView: cc.Node;
+    customView: cc.Node = null;
     @property(cc.Button)
-    customBtn: cc.Button;
+    customBtn: cc.Button = null;
     @property(cc.EditBox)
-    inputCmd: cc.EditBox;
+    inputCmd: cc.EditBox = null;
 
     // onLoad () {},
 

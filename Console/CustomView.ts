@@ -5,9 +5,9 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class CustomView extends cc.Component {
     @property(cc.Node)
-    content: cc.Node;
+    content: cc.Node = null;
     @property(cc.Prefab)
-    btnPrefab: cc.Prefab
+    btnPrefab: cc.Prefab = null;
 
     onLoad() {
         bb.on(Console.EventType.UPDATE_CUSTOM, this.updateCustomList, this);

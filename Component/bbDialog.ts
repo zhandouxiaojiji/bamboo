@@ -2,13 +2,13 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class bbDialog extends cc.Component {
     @property(cc.Label)
-    title: cc.Label;
+    title: cc.Label = null;
     @property(cc.Label)
-    content: cc.Label;
+    content: cc.Label = null;
     @property(cc.Button)
-    okBtn: cc.Button;
+    okBtn: cc.Button = null;
     @property(cc.Button)
-    cancelBtn: cc.Button;
+    cancelBtn: cc.Button = null;
 
     show(title: string, content: string, ok: () => void, cancel: () => void) {
         this.title.string = title;

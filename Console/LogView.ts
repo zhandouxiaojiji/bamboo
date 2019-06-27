@@ -5,9 +5,9 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class LogView extends cc.Component {
     @property(cc.Label)
-    label: cc.Label;
+    label: cc.Label = null;
     @property(cc.Node)
-    content: cc.Node;
+    content: cc.Node = null;
 
     onLoad() {
         bb.on(Console.EventType.UPDATE_LOG, this.updateLog, this);

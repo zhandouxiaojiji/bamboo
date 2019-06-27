@@ -1,7 +1,8 @@
 const { ccclass, property } = cc._decorator;
 @ccclass
 export default class bbNotify extends cc.Component {
-    msgText: cc.Label;
+    @property(cc.Label)
+    msgText: cc.Label = null;
 
     start() {
         this.node.opacity = 0;
