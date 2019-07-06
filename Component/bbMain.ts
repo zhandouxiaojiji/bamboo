@@ -24,11 +24,11 @@ export default class bbMain extends cc.Component {
 
     start() {
         var node = cc.instantiate(this.notifyPrefab);
-        cc.find("Canvas").addChild(node, 99999);
+        cc.find("Canvas").addChild(node, cc.macro.MAX_ZINDEX);
         this.notify = node.getComponent(bbNotify);
 
         node = cc.instantiate(this.dialogPrefab);
-        cc.find("Canvas").addChild(node, 99999);
+        cc.find("Canvas").addChild(node, cc.macro.MAX_ZINDEX);
         this.dialog = node.getComponent(bbDialog);
     };
 
