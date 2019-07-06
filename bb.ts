@@ -5,10 +5,12 @@ export default {
     EventType: {
         NOTIFY: "NOTIFY",
         DIALOG: "DIALOG",
+        SCHEDULE: "SCHEDULE",
+        UNSCHEDULE: "UNSCHEDULE",
     },
 
     log(...args: any) {
-        cc.log("bamboo", ...args);
+        cc.log("", ...args);
         let s = "";
         for (let i = 0; i < args.length; i++) {
             if (args[i]) {
@@ -49,6 +51,14 @@ export default {
         this.dispatch(this.EventType.NOTIFY, msg);
     },
     dialog(title: string, content: string, ok: () => void, cancel: () => void) {
-        this.dispatch(title, content, ok, cancel);
+        this.dispatch(this.EventType.DIALOG, title, content, ok, cancel);
+    },
+
+    schedule(callback: Function, interval?: number, repeat?: number, delay?: number){
+        this.dispatch(this.EventType.SCHEDULE, callback, interval, repeat, delay);
+    },
+
+    unschedule(callback: Function) {
+        this.dispatch(this.EventType.UNSCHEDULE, callback);
     }
 };

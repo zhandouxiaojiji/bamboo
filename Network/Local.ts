@@ -11,6 +11,7 @@ class Local {
         this.send(op, data);
     };
     send(op: number, data?: any) {
+        bb.log("&&&& send", op, data);
         bb.dispatch(this.EventType.LOCAL_SEND, op, data);
     };
     recv(op: number, data: any) {

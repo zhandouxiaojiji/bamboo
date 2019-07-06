@@ -1,3 +1,5 @@
+import bb from "../bb";
+
 const { ccclass, property } = cc._decorator;
 @ccclass
 export default class bbDialog extends cc.Component {
@@ -11,6 +13,8 @@ export default class bbDialog extends cc.Component {
     cancelBtn: cc.Button = null;
 
     show(title: string, content: string, ok: () => void, cancel: () => void) {
+        bb.log(title, content);
+        this.node.active = true;
         this.title.string = title;
         this.content.string = content;
         this.okBtn.node.on("click", () => {
