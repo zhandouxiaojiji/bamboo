@@ -6,7 +6,7 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class TestSdkboxPlay extends cc.Component {
     onConnect(status: string) {
-        bb.log("on connect !!!", status);
+        cc.log("on connect !!!", status);
     };
 
     testUser() {

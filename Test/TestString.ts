@@ -6,9 +6,9 @@ const { ccclass, property } = cc._decorator;
 export default class TestString extends cc.Component {
     start() {
         Console.addCustom("测试字符串", () => {
-            bb.log("test string");
+            cc.log("test string");
             var str = "aa bb cc";
-            bb.log(str.split(" "));
+            cc.log(str.split(" "));
         });
     };
 };

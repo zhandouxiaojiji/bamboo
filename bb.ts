@@ -10,7 +10,6 @@ export default {
     },
 
     log(...args: any) {
-        cc.log("", ...args);
         let s = "";
         for (let i = 0; i < args.length; i++) {
             if (args[i]) {

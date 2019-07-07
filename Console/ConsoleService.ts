@@ -13,10 +13,10 @@ class ConsoleService {
 
     init() {
         this.addCustom("测试日志", () => {
-            bb.log("this is a test log");
+            cc.log("this is a test log");
         });
         this.addCmd("testcmd", () => {
-            bb.log("this is a test cmd");
+            cc.log("this is a test cmd");
         });
     };
 
@@ -30,7 +30,7 @@ class ConsoleService {
     };
 
     addCustom(name: string, callback: () => void) {
-        // bb.log("addCustom", name, callback);
+        // cc.log("addCustom", name, callback);
         this.customs.push({
             name: name,
             callback: callback
@@ -46,7 +46,7 @@ class ConsoleService {
         }
         var callback = this.customs[name];
         if (!callback) {
-            bb.log("custom not exist:", name);
+            cc.log("custom not exist:", name);
         }
         callback.call(callback);
     };
@@ -61,7 +61,7 @@ class ConsoleService {
             args.shift();
             callback.apply(callback, args);
         } else {
-            bb.log("todo send cmd to server");
+            cc.log("todo send cmd to server");
         }
     };
     setServerConf(conf) {

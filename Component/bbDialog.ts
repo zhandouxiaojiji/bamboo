@@ -13,7 +13,7 @@ export default class bbDialog extends cc.Component {
     cancelBtn: cc.Button = null;
 
     show(title: string, content: string, ok: () => void, cancel: () => void) {
-        bb.log(title, content);
+        cc.log(title, content);
         this.node.active = true;
         this.title.string = title;
         this.content.string = content;

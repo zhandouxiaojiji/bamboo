@@ -41,7 +41,7 @@ export default class ConsoleView extends cc.Component {
     };
 
     onClickRun() {
-        bb.log("run cmd", this.inputCmd.string);
+        cc.log("run cmd", this.inputCmd.string);
         Console.runCmd(this.inputCmd.string);
     };
 

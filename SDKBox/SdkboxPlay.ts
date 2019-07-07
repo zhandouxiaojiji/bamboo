@@ -18,17 +18,17 @@ class SdkboxPlay {
     };
     signin() {
         if (!cc.sys.isMobile) {
-            bb.log("not mobile platform");
+            cc.log("not mobile platform");
             return;
         }
         sdkbox.PluginSdkboxPlay.signin(true);
         sdkbox.PluginSdkboxPlay.setListener({
             onConnectionStatusChanged: (status: string) => {
-                bb.log("onConnectionStatusChanged", status);
-                bb.log("isSignin", sdkbox.PluginSdkboxPlay.isSignedIn());
-                bb.log("name", this.getInfo("name"));
-                bb.log("display_name", this.getInfo("display_name"));
-                bb.log("player_id", this.getInfo("player_id"));
+                cc.log("onConnectionStatusChanged", status);
+                cc.log("isSignin", sdkbox.PluginSdkboxPlay.isSignedIn());
+                cc.log("name", this.getInfo("name"));
+                cc.log("display_name", this.getInfo("display_name"));
+                cc.log("player_id", this.getInfo("player_id"));
                 bb.dispatch(this.EventType.CON_STATUS, status);
             }
         })

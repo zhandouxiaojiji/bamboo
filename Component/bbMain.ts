@@ -39,12 +39,12 @@ export default class bbMain extends cc.Component {
     };
 
     onNotify(msg: string) {
-        bb.log("onNotify", msg);
+        cc.log("onNotify", msg);
         this.notify.show(msg);
     };
 
     onDialog(title: string, content: string, ok: () => void, cancel: () => void) {
-        bb.log("onDialog", title, content, ok, cancel);
+        cc.log("onDialog", title, content, ok, cancel);
         this.dialog.show(title, content, ok, cancel);
         this.dialog.node.active = true;
     };
