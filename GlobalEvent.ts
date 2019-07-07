@@ -1,19 +1,15 @@
+import bb from "./bb";
 
 class GlobalEvent {
     handles = {};
     //发送事件
-    dispatch(...args: any) {
+    dispatch(name: any, ...args: any) {
         var returns = []; //返回值
-
-        var name = args[0];
-        // console.assert(name);
 
         for (var findEvenName in this.handles) {
             if (findEvenName == name) {
                 for (var i = 0; i < this.handles[name].length; i++) {
                     var handler = this.handles[name][i]
-                    var args = Array.prototype.slice.call(args);
-                    args.shift();
                     var returnValue = handler.callback.apply(handler.target, args);
                     returns.push(returnValue);
                 }

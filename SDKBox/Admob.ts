@@ -3,12 +3,11 @@ class Admob {
     loadCallbacks: {};
     rewardCallbacks: {};
     init() {
-        let self = this;
         cc.log("bb.Admob init");
         if (cc.sys.isMobile) {
             sdkbox.PluginAdMob.setListener({
                 adViewDidReceiveAd: (name) => {
-                    var cb = self.loadCallbacks[name];
+                    var cb = this.loadCallbacks[name];
                     cc.log('adViewDidReceiveAd name=' + name);
                     if (cb) {
                         cb();
@@ -31,7 +30,7 @@ class Admob {
                 },
                 reward: (name, currency, amount) => {
                     cc.log('reward:' + name + ',' + currency + ',' + amount);
-                    var cb = self.rewardCallbacks[name];
+                    var cb = this.rewardCallbacks[name];
                     if (cb) {
                         cb(currency, amount);
                     }
