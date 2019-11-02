@@ -2,7 +2,7 @@ import bb from "../bb";
 
 class Http {
     host: string;
-    authorization: string;
+    authorization: string = "";
     init(host: string) {
         this.host = bb.getData("host", host);
         cc.log("init host:", this.host);
