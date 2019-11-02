@@ -19,8 +19,8 @@ export default class ConsoleView extends cc.Component {
 
     start() {
         this.view.active = false;
-        this.logView.active = true;
-        this.customView.active = false;
+        this.logView.active = false;
+        this.customView.active = true;
         Console.init();
     };
 
