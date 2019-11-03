@@ -45,8 +45,23 @@ export default {
     },
 
     open(viewPrefab: cc.Prefab) {
-        cc.instantiate(viewPrefab).parent = cc.find("Canvas");
+        const node = cc.instantiate(viewPrefab);
+        node.parent = cc.find("Canvas");
+        return node;
     },
+    loadAndOpen(path: string, callback?: Function) {
+        cc.loader.loadRes(path, (err, prefab) => {
+            if (prefab) {
+                const node = this.open(prefab);
+                if(callback) {
+                    callback(node);
+                }
+            } else {
+                this.log(err);
+            }
+        });
+    },
+
     notify(msg: string) {
         this.dispatch(this.EventType.NOTIFY, msg);
     },
@@ -54,7 +69,7 @@ export default {
         this.dispatch(this.EventType.DIALOG, title, content, ok, cancel);
     },
 
-    schedule(callback: Function, interval?: number, repeat?: number, delay?: number){
+    schedule(callback: Function, interval?: number, repeat?: number, delay?: number) {
         this.dispatch(this.EventType.SCHEDULE, callback, interval, repeat, delay);
     },
 
