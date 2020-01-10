@@ -61,7 +61,7 @@ class Admob {
         }
     };
 
-    reward(name: string, cb: () => void) {
+    reward(name: string, cb: (currency?, amount?) => void) {
         cc.log("show reward " + name);
         this.rewardCallbacks[name] = cb;
         if (cc.sys.isMobile) {
