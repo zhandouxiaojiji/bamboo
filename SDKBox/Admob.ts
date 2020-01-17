@@ -3,6 +3,9 @@ class Admob {
     loadCallbacks: {};
     rewardCallbacks: {};
     init() {
+        this.loadCallbacks = {};
+        this.rewardCallbacks = {};
+        
         cc.log("bb.Admob init");
         if (cc.sys.isMobile) {
             sdkbox.PluginAdMob.setListener({
@@ -75,6 +78,10 @@ class Admob {
     removeLoadCallback(name: string) {
         this.loadCallbacks[name] = null;
     };
+
+    isAvailable(name: string) {
+        return sdkbox.PluginAdMob.isAvailable(name);
+    }
 };
 
 export default new Admob;
