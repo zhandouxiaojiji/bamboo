@@ -1,29 +1,43 @@
 
 class Admob {
-    loadCallbacks: {};
-    rewardCallbacks: {};
+    loadCallbacks: any;
+    rewardCallbacks: any;
+    failCallbacks: any;
+    fullScreenCallbacks: any;
+    dismissScreenCallbacks: any;
+
     init() {
         this.loadCallbacks = {};
         this.rewardCallbacks = {};
+        this.failCallbacks = {};
+        this.fullScreenCallbacks = {};
+        this.dismissScreenCallbacks = {}
+
+        var callback = (cbs, name) => {
+            var cb = cbs[name]
+            if(cb){
+                cb();
+            }
+        }
         
         cc.log("bb.Admob init");
         if (cc.sys.isMobile) {
             sdkbox.PluginAdMob.setListener({
                 adViewDidReceiveAd: (name) => {
-                    var cb = this.loadCallbacks[name];
                     cc.log('adViewDidReceiveAd name=' + name);
-                    if (cb) {
-                        cb();
-                    }
+                    callback(this.loadCallbacks, name);
                 },
                 adViewDidFailToReceiveAdWithError: (name, msg) => {
                     cc.log('adViewDidFailToReceiveAdWithError name=' + name + ' msg=' + msg);
+                    callback(this.failCallbacks, name);
                 },
                 adViewWillPresentScreen: (name) => {
                     cc.log('adViewWillPresentScreen name=' + name);
+                    callback(this.fullScreenCallbacks, name);
                 },
                 adViewDidDismissScreen: (name) => {
                     cc.log('adViewDidDismissScreen name=' + name);
+                    callback(this.dismissScreenCallbacks, name)
                 },
                 adViewWillDismissScreen: (name) => {
                     cc.log('adViewWillDismissScreen=' + name);
@@ -70,13 +84,6 @@ class Admob {
         if (cc.sys.isMobile) {
             sdkbox.PluginAdMob.show(name);
         }
-    };
-
-    setLoadCallback(name: string, cb: () => void) {
-        this.loadCallbacks[name] = cb;
-    };
-    removeLoadCallback(name: string) {
-        this.loadCallbacks[name] = null;
     };
 
     isAvailable(name: string) {
