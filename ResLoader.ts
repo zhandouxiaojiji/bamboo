@@ -24,7 +24,6 @@ class ResLoader {
             this.name2Item[item.name] = item;
             this.path2Item[item.path] = item;
         });
-        cc.log("load arr", arr);
         cc.loader.loadResArray(list, cc.SpriteFrame, (completedCount: number, totalCount: number, item: any)=>{
             bb.dispatch(EventType.UPDATE_PROCESS, completedCount, totalCount);
         }, (err, sprites) => {
@@ -38,7 +37,7 @@ class ResLoader {
         })
     }
     getItemByName(name: string) {
-        return this.name2Item[name];
+        return this.name2Item[name].res;
     }
 }
 
