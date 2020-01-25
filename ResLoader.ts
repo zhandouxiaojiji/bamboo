@@ -3,7 +3,6 @@ import bb from "./bb";
 export interface ResItem {
     name: string;
     path: string;
-    desc: string;
     res?: any;
 }
 
@@ -15,21 +14,27 @@ class ResLoader {
     path2Item: {[key: string]: ResItem};
     name2Item: {[key: string]: ResItem};
 
-    loadSpriteFrames(arr: ResItem[], cb: Function) {
+    loadSpriteFrames(arr: ResItem[], cb?: Function) {
+        this.name2Item = this.name2Item || {};
+        this.path2Item = this.path2Item || {};
+
         const list = [];
         arr.forEach((item) => {
             list.push(item.path);
-        })
+            this.name2Item[item.name] = item;
+            this.path2Item[item.path] = item;
+        });
+        cc.log("load arr", arr);
         cc.loader.loadResArray(list, cc.SpriteFrame, (completedCount: number, totalCount: number, item: any)=>{
-            const resItem = arr[completedCount - 1];
-            bb.dispatch(EventType.UPDATE_PROCESS, completedCount, totalCount, resItem.desc);
+            bb.dispatch(EventType.UPDATE_PROCESS, completedCount, totalCount);
         }, (err, sprites) => {
             sprites.forEach((e, i) => {
                 const resItem = arr[i];
                 resItem.res = e;
-                this.name2Item[resItem.name] = resItem;
-                this.path2Item[resItem.path] = resItem;
-            })
+            });
+            if(cb) {
+                cb();
+            }
         })
     }
     getItemByName(name: string) {

@@ -11,10 +11,10 @@ export default class bbResLoader extends cc.Component {
     progressBar: cc.ProgressBar;
 
     start() {
-        cc.log(ResLoader)
         bb.on(EventType.UPDATE_PROCESS, (completedCount: number, totalCount: number, desc: string) => {
-            this.label.string = `${desc}(${completedCount}/${totalCount})`;
+            this.label.string = `正在加载卡牌(${completedCount}/${totalCount})`;
             this.progressBar.progress = completedCount / totalCount;
+            cc.log(this.progressBar.progress);
         })
     }
 };
