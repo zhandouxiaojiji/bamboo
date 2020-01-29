@@ -39,6 +39,6 @@ class SdkboxPlay {
         }
         return sdkbox.PluginSdkboxPlay.isSignedIn();
     };
+    
 };
-
-export default new SdkboxPlay;
+export default new SdkboxPlay();

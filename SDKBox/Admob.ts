@@ -91,4 +91,4 @@ class Admob {
     }
 };
 
-export default new Admob;
+export default new Admob();
