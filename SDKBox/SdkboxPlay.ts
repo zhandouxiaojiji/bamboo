@@ -45,5 +45,10 @@ class SdkboxPlay {
     showAllLeaderboard() {
         sdkbox.PluginSdkboxPlay.showAllLeaderboards();
     }
+    submitScore(name: string, score: number) {
+        if(this.isSignin()){
+            sdkbox.PluginSdkboxPlay.submitScore(name, score);
+        }
+    }
 };
 export default new SdkboxPlay();
