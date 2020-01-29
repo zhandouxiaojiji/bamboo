@@ -3,19 +3,19 @@ import bb from "../bb";
 class SdkboxPlay {
     EventType = {
         CON_STATUS: "CON_STATUS"
-    };
+    }
     init() {
         if (!cc.sys.isMobile) {
             return;
         }
         sdkbox.PluginSdkboxPlay.init();
-    };
+    }
     getInfo(field: string) {
         if (!cc.sys.isMobile) {
             return;
         }
         return sdkbox.PluginSdkboxPlay.getPlayerAccountField(field);
-    };
+    }
     signin() {
         if (!cc.sys.isMobile) {
             cc.log("not mobile platform");
@@ -32,13 +32,18 @@ class SdkboxPlay {
                 bb.dispatch(this.EventType.CON_STATUS, status);
             }
         })
-    };
+    }
     isSignin() {
         if (!cc.sys.isMobile) {
             return false;
         }
         return sdkbox.PluginSdkboxPlay.isSignedIn();
-    };
-    
+    }
+    showLeaderboard(name: string) {
+        sdkbox.PluginSdkboxPlay.showLeaderboard(name);
+    }
+    showAllLeaderboard() {
+        sdkbox.PluginSdkboxPlay.showAllLeaderboards();
+    }
 };
 export default new SdkboxPlay();
