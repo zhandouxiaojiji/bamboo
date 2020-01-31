@@ -46,8 +46,28 @@ class SdkboxPlay {
         sdkbox.PluginSdkboxPlay.showAllLeaderboards();
     }
     submitScore(name: string, score: number) {
-        if(this.isSignin()){
-            sdkbox.PluginSdkboxPlay.submitScore(name, score);
+        var localScore = parseInt(cc.sys.localStorage.getItem(name)) || 0;
+        if (score > localScore) {
+            cc.sys.localStorage.setItem(name, score);
+            localScore = score;
+        }
+        if (this.isSignin()) {
+            const remoteScore = parseInt(sdkbox.PluginSdkboxPlay.getMyScore(name, 2, 2).toString()) || 0;
+            if (localScore > remoteScore) {
+                sdkbox.PluginSdkboxPlay.submitScore(name, score);
+            }
+        }
+    }
+    getMyScore(name: string) {
+        const localScore = parseInt(cc.sys.localStorage.getItem(name)) || 0;
+        if (this.isSignin()) {
+            const remoteScore = parseInt(sdkbox.PluginSdkboxPlay.getMyScore(name, 2, 2).toString()) || 0;
+            if (localScore < remoteScore) {
+                cc.sys.localStorage.setItem(name, remoteScore);
+            }
+            return localScore > remoteScore ? localScore : remoteScore;
+        } else {
+            return localScore;
         }
     }
 };
