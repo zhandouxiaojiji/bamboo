@@ -40,10 +40,14 @@ class SdkboxPlay {
         return sdkbox.PluginSdkboxPlay.isSignedIn();
     }
     showLeaderboard(name: string) {
-        sdkbox.PluginSdkboxPlay.showLeaderboard(name);
+        if (this.isSignin()) {
+            sdkbox.PluginSdkboxPlay.showLeaderboard(name);
+        }
     }
     showAllLeaderboard() {
-        sdkbox.PluginSdkboxPlay.showAllLeaderboards();
+        if (this.isSignin()) {
+            sdkbox.PluginSdkboxPlay.showAllLeaderboards();
+        }
     }
     submitScore(name: string, score: number) {
         var localScore = parseInt(cc.sys.localStorage.getItem(name)) || 0;
@@ -70,6 +74,22 @@ class SdkboxPlay {
             return localScore > remoteScore ? localScore : remoteScore;
         } else {
             return localScore;
+        }
+    }
+    unlockAchievement(name: string) {
+        if(this.isSignin()){
+            sdkbox.PluginSdkboxPlay.unlockAchievement(name);
+        }
+    }
+    incrementAchievement(name: string, increment: number) {
+        if (this.isSignin()) {
+            sdkbox.PluginSdkboxPlay.incrementAchievement(name, increment);
+
+        }
+    }
+    showAchievements() {
+        if (this.isSignin()) {
+            sdkbox.PluginSdkboxPlay.showAchievements();
         }
     }
 };
