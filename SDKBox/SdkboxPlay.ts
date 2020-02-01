@@ -52,7 +52,8 @@ class SdkboxPlay {
             localScore = score;
         }
         if (this.isSignin()) {
-            const remoteScore = parseInt(sdkbox.PluginSdkboxPlay.getMyScore(name, 2, 2).toString()) || 0;
+            const ret = sdkbox.PluginSdkboxPlay.getMyScore(name, 2, 2);
+            const remoteScore = ret ? ret["score"] : 0;
             if (localScore > remoteScore) {
                 sdkbox.PluginSdkboxPlay.submitScore(name, score);
             }
@@ -61,7 +62,8 @@ class SdkboxPlay {
     getMyScore(name: string) {
         const localScore = parseInt(cc.sys.localStorage.getItem(name)) || 0;
         if (this.isSignin()) {
-            const remoteScore = parseInt(sdkbox.PluginSdkboxPlay.getMyScore(name, 2, 2).toString()) || 0;
+            const ret = sdkbox.PluginSdkboxPlay.getMyScore(name, 2, 2);
+            const remoteScore = ret ? ret["score"] : 0;
             if (localScore < remoteScore) {
                 cc.sys.localStorage.setItem(name, remoteScore);
             }
