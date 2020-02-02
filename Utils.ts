@@ -5,4 +5,8 @@ export function randomNum(minNum: number, maxNum?: number) {
   } else {
     Math.floor(Math.random() * (minNum + 1));
   }
-} 
+}
+
+export function cloneObject(obj: any) {
+  return JSON.parse(JSON.stringify(obj));
+}
