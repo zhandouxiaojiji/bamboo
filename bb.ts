@@ -53,7 +53,7 @@ export default {
         cc.loader.loadRes(path, (err, prefab) => {
             if (prefab) {
                 const node = this.open(prefab);
-                if(callback) {
+                if (callback) {
                     callback(node);
                 }
             } else {
@@ -75,5 +75,11 @@ export default {
 
     unschedule(callback: Function) {
         this.dispatch(this.EventType.UNSCHEDULE, callback);
+    },
+
+    playSound(url: string, loop?: boolean, volume?: number) {
+        cc.loader.loadRes(url, cc.AudioClip, function (err, clip) {
+            cc.audioEngine.play(clip, loop || false, volume || 1);
+        });
     }
 };
