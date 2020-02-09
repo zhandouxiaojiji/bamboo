@@ -1,5 +1,6 @@
 import Http from "../Network/Http";
 import bb from "../bb";
+import Language from "../Language";
 
 class ConsoleService {
     EventType = {
@@ -15,6 +16,12 @@ class ConsoleService {
         this.addCustom("测试日志", () => {
             cc.log("this is a test log");
         });
+        this.addCustom("切换中文", () => {
+            Language.setCode("zh");
+        });
+        this.addCustom("切换英文", () => {
+            Language.setCode("en");
+        })
         this.addCmd("testcmd", () => {
             cc.log("this is a test cmd");
         });

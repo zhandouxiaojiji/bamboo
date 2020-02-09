@@ -1,36 +1,40 @@
-// TODO
+import bb from "./bb";
+
 class Language {
-    init() {
-        cc.log("bb.Language.init", cc.sys.languageCode);
-        // const i18n = require('LanguageData');
-        var code = cc.sys.languageCode;
-        //至少需要提供en一种
-        if (!this.exist(code)) {
-            if (code.indexOf('tw') >= 0) {
-                if (this.exist('zh-tw')) {
-                    code = 'zh-tw';
-                } else {
-                    code = 'en';
+    data: any;
+    code: string;
+    EventType = {
+        CHANGE_CODE: "CHANGE_CODE",
+    }
+    getCode() {
+        return cc.sys.languageCode;
+    }
+    setCode(code: string) {
+        this.code = code;
+        bb.dispatch(this.EventType.CHANGE_CODE);
+    } 
+    getStr(name: string){
+        if(!this.data[this.code] || !this.data[this.code][name]) {
+            return this.data['en'][name];
+        }
+        return this.data[this.code][name];
+    }
+    init(languageProp) {
+        this.data = {};
+        for(let name in languageProp) {
+            let p = languageProp[name];
+            for(let code in p) {
+                if(code != "NAME") {
+                    if(!this.data[code]) {
+                        this.data[code] = {};
+                    }
+                    this.data[code][p.NAME] = p[code];
                 }
-            }
-            else if (code.indexOf('zh') >= 0) {
-                if (this.exist('zh-cn')) {
-                    code = 'zh-cn';
-                } else if (this.exist('zh')) {
-                    code = 'zh';
-                } else {
-                    code = 'en';
-                }
-            } else {
-                code = 'en';
             }
         }
-        // i18n.init(code);
+        this.code = this.getCode();
+        cc.log(this.data);
     };
-    exist(code: string) {
-        return false;
-        // return window.i18n.languages[code]
-    }
 }
 
-export default new Language;
+export default new Language();
