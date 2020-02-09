@@ -15,6 +15,8 @@ class Language {
     } 
     getStr(name: string){
         if(!this.data[this.code] || !this.data[this.code][name]) {
+            cc.log(this.data);
+            cc.log(this.data['en']);
             return this.data['en'][name];
         }
         return this.data[this.code][name];

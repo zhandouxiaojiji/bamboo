@@ -17,7 +17,7 @@ class ConsoleService {
             cc.log("this is a test log");
         });
         this.addCustom("切换中文", () => {
-            Language.setCode("zh");
+            Language.setCode("zh-cn");
         });
         this.addCustom("切换英文", () => {
             Language.setCode("en");
