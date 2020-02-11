@@ -4,16 +4,27 @@ import Language from "../Language";
 const { ccclass, property } = cc._decorator;
 @ccclass
 export default class bbNotify extends cc.Component {
-    strId: string;
-    onLoad() {
-        this.strId = this.getComponent(cc.Label).string;
-        this.onChangeCode();
+    @property(cc.String)
+    strId: string = "";
+    @property(cc.Boolean)
+    isSprite: boolean = false;
 
+    onLoad() {
+        if(this.strId == ""){
+            this.strId = this.getComponent(cc.Label).string;
+        }
+        this.onChangeCode();
         bb.on(Language.EventType.CHANGE_CODE, this.onChangeCode, this);
     }
 
     onChangeCode() {
-        this.getComponent(cc.Label).string = Language.getStr(this.strId);
+        if(this.isSprite) {
+            cc.loader.loadRes(Language.getStr(this.strId), cc.SpriteFrame, (err, spriteFrame) => {
+                this.getComponent(cc.Sprite).spriteFrame = spriteFrame;
+            });
+        } else {
+            this.getComponent(cc.Label).string = Language.getStr(this.strId);
+        }
     }
 
 };
