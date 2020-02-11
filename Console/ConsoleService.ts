@@ -17,10 +17,10 @@ class ConsoleService {
             cc.log("this is a test log");
         });
         this.addCustom("切换中文", () => {
-            Language.setCode("zh-cn");
+            Language.setLanguage(cc.sys.LANGUAGE_CHINESE);
         });
         this.addCustom("切换英文", () => {
-            Language.setCode("en");
+            Language.setLanguage(cc.sys.LANGUAGE_ENGLISH);
         })
         this.addCmd("testcmd", () => {
             cc.log("this is a test cmd");

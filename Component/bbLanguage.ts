@@ -14,7 +14,7 @@ export default class bbNotify extends cc.Component {
             this.strId = this.getComponent(cc.Label).string;
         }
         this.onChangeCode();
-        bb.on(Language.EventType.CHANGE_CODE, this.onChangeCode, this);
+        bb.on(Language.EventType.CHANGE_LANGUAGE, this.onChangeCode, this);
     }
 
     onChangeCode() {

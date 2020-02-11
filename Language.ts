@@ -2,22 +2,22 @@ import bb from "./bb";
 
 class Language {
     data: any;
-    code: string;
+    language: string;
     EventType = {
-        CHANGE_CODE: "CHANGE_CODE",
+        CHANGE_LANGUAGE: "CHANGE_LANGUAGE",
     }
-    getCode() {
-        return cc.sys.languageCode;
+    setLanguage(language: string) {
+        this.language = language;
+        bb.dispatch(this.EventType.CHANGE_LANGUAGE);
     }
-    setCode(code: string) {
-        this.code = code;
-        bb.dispatch(this.EventType.CHANGE_CODE);
-    } 
+    getLanguage() {
+        return this.language;
+    }
     getStr(name: string){
-        if(!this.data[this.code] || !this.data[this.code][name]) {
-            return this.data['en'][name];
+        if(!this.data[this.language] || !this.data[this.language][name]) {
+            return this.data[cc.sys.LANGUAGE_ENGLISH][name];
         }
-        return this.data[this.code][name];
+        return this.data[this.language][name];
     }
     init(languageProp) {
         this.data = {};
@@ -32,8 +32,7 @@ class Language {
                 }
             }
         }
-        this.code = this.getCode();
-        cc.log(this.data);
+        this.language = cc.sys.language;
     };
 }
 
