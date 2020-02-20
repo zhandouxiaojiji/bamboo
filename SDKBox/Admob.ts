@@ -21,7 +21,7 @@ class Admob {
         }
         
         cc.log("bb.Admob init");
-        if (cc.sys.isMobile) {
+        if (cc.sys.isNative) {
             sdkbox.PluginAdMob.setListener({
                 adViewDidReceiveAd: (name) => {
                     cc.log('adViewDidReceiveAd name=' + name);
@@ -59,21 +59,21 @@ class Admob {
 
     cache(name: string) {
         cc.log("cache admob " + name);
-        if (cc.sys.isMobile) {
+        if (cc.sys.isNative) {
             sdkbox.PluginAdMob.cache(name);
         }
     };
 
     hide(name: string) {
         cc.log("hide admob " + name);
-        if (cc.sys.isMobile) {
+        if (cc.sys.isNative) {
             sdkbox.PluginAdMob.hide(name);
         }
     };
 
     show(name: string) {
         cc.log("show admob ", name);
-        if (cc.sys.isMobile) {
+        if (cc.sys.isNative) {
             sdkbox.PluginAdMob.show(name);
         }
     };
@@ -81,7 +81,7 @@ class Admob {
     reward(name: string, cb: (currency?, amount?) => void) {
         cc.log("show reward " + name);
         this.rewardCallbacks[name] = cb;
-        if (cc.sys.isMobile) {
+        if (cc.sys.isNative) {
             sdkbox.PluginAdMob.show(name);
         }
     };

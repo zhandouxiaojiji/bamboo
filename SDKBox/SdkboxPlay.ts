@@ -5,19 +5,19 @@ class SdkboxPlay {
         CON_STATUS: "CON_STATUS"
     }
     init() {
-        if (!cc.sys.isMobile) {
+        if (!cc.sys.isNative) {
             return;
         }
         sdkbox.PluginSdkboxPlay.init();
     }
     getInfo(field: string) {
-        if (!cc.sys.isMobile) {
+        if (!cc.sys.isNative) {
             return;
         }
         return sdkbox.PluginSdkboxPlay.getPlayerAccountField(field);
     }
     signin() {
-        if (!cc.sys.isMobile) {
+        if (!cc.sys.isNative) {
             cc.log("not mobile platform");
             return;
         }
@@ -34,7 +34,7 @@ class SdkboxPlay {
         })
     }
     isSignin() {
-        if (!cc.sys.isMobile) {
+        if (!cc.sys.isNative) {
             return false;
         }
         return sdkbox.PluginSdkboxPlay.isSignedIn();
