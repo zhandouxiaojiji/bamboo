@@ -12,7 +12,9 @@ export default class bbResLoader extends cc.Component {
 
     start() {
         bb.on(EventType.UPDATE_PROCESS, (completedCount: number, totalCount: number, desc: string) => {
-            this.label.string = `Loading Pokers(${completedCount}/${totalCount})`;
+            if(this.label) {
+                this.label.string = `(${completedCount}/${totalCount})`;
+            }
             this.progressBar.progress = completedCount / totalCount;
         })
     }
