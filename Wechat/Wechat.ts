@@ -79,7 +79,16 @@ class Wechat {
 
     submitScore(key: string, score: number) {
         wx.setUserCloudStorage({
-            [key]: score
+            KVDataList: [{ key, value: String(score) }],
+            success: (ret) => {
+                console.log("setUserCloudStore ok", ret);
+            },
+            fail: (ret) => {
+                console.log("setUserCloudStorage fail", ret);
+            },
+            complete: (ret) => {
+                console.log("setUserCloudStore complete", ret);
+            }
         });
         cc.sys.localStorage.setItem(key, score);
     }
