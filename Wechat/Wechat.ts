@@ -1,29 +1,37 @@
-import bb from "../bb";
+import { decryptData } from "./WXBizDataCrypt";
 
 class Wechat {
     userInfo: any;
+    appId: string;
+    sessionKey: string;
+    iv: string;
 
     canUse() {
         return cc.sys.platform == cc.sys.WECHAT_GAME
     }
 
-    init() {
+    init(appId: string) {
         if (!this.canUse()) {
             return;
         }
+        this.appId = appId;
         // this.initUserInfoButton();
         wx.getSetting({
             success: (res) => {
-              console.log(res.authSetting)
-              if(!res.authSetting["scope.userInfo"]) {
-                  this.initUserInfoButton();
-              }
-              // res.authSetting = {
-              //   "scope.userInfo": true,
-              //   "scope.userLocation": true
-              // }
+                console.log(res.authSetting)
+                if (!res.authSetting["scope.userInfo"]) {
+                    this.initUserInfoButton();
+                }
+                // res.authSetting = {
+                //   "scope.userInfo": true,
+                //   "scope.userLocation": true
+                // }
             }
-          })
+        })
+    }
+
+    login() {
+        wx.login();
     }
 
     initUserInfoButton() {
@@ -67,6 +75,41 @@ class Wechat {
             button.hide();
             button.destroy();
         });
+    }
+
+    submitScore(key: string, score: number) {
+        wx.setUserCloudStorage({
+            [key]: score
+        });
+        cc.sys.localStorage.setItem(key, score);
+    }
+
+    getMyScore(key: string, cb: any) {
+        var localScore = parseInt(cc.sys.localStorage.getItem(key)) || 0;
+        // TODO
+        // wx.getUserInteractiveStorage({
+        //     keyList: [key],
+        //     success: (encryptedData) => {
+        //         console.log("get my encryptedData", encryptedData);
+        //         let data = decryptData(encryptedData, this.iv, this.appId);
+        //         console.log("get my data", data);
+        //         let remoteScore = data[key] || "0";
+        //         cb(parseInt(remoteScore));
+        //         if (localScore < remoteScore) {
+        //             cc.sys.localStorage.setItem(key, remoteScore);
+        //         }
+        //     },
+        // });
+        return localScore;
+    }
+
+    submitRank(score: number) {
+        wx.setUserCloudStorage({
+            wxgame: {
+                score,
+                update_time: Date.parse(Date()) / 1000
+            }
+        })
     }
 }
 
