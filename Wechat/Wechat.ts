@@ -120,6 +120,13 @@ class Wechat {
             }
         })
     }
+
+    postMessageOpenContent(cmd, data) {
+        wx.getOpenDataContext().postMessage({
+            cmd,
+            data,
+        });
+    }
 }
 
 export default new Wechat();
