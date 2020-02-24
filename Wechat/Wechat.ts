@@ -10,7 +10,7 @@ class Wechat {
         return cc.sys.platform == cc.sys.WECHAT_GAME
     }
 
-    init(appId: string) {
+    init(appId?: string) {
         if (!this.canUse()) {
             return;
         }
