@@ -1,8 +1,9 @@
-import { decryptData } from "./WXBizDataCrypt";
-
 class Wechat {
+    host: string;
     userInfo: any;
     appId: string;
+    openId: string;
+    unionId: string;
     sessionKey: string;
     iv: string;
 
@@ -10,11 +11,12 @@ class Wechat {
         return cc.sys.platform == cc.sys.WECHAT_GAME
     }
 
-    init(appId?: string) {
+    init(appId: string, host: string) {
         if (!this.canUse()) {
             return;
         }
         this.appId = appId;
+        this.host = host;
         // this.initUserInfoButton();
         wx.getSetting({
             success: (res) => {

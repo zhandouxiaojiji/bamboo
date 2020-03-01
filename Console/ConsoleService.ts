@@ -1,39 +1,30 @@
-import Http from "../Network/Http";
 import bb from "../bb";
 import Language from "../Language";
 
 class ConsoleService {
     EventType = {
-        UPDATE_LOG: "UPDATE_LOG",
         UPDATE_CUSTOM: "UPDATE_CUSTOM"
     };
-    log: string;
     customs: any = [];
     cmds = {};
-    serverConf = {};
 
     init() {
-        this.addCustom("测试日志", () => {
-            cc.log("this is a test log");
-        });
         this.addCustom("切换中文", () => {
             Language.setLanguage(cc.sys.LANGUAGE_CHINESE);
         });
         this.addCustom("切换英文", () => {
             Language.setLanguage(cc.sys.LANGUAGE_ENGLISH);
         })
-        this.addCmd("testcmd", () => {
-            cc.log("this is a test cmd");
+        this.addCmd("ls", () => {
+            var arr = [];
+            for(let cmd in this.cmds) {
+                arr.push(cmd);
+            }
+            arr.sort();
+            var str = arr.join("\n");
+            bb.notify(`指令列表:${str}`);
+            console.log(`指令列表:${str}`);
         });
-    };
-
-    addLog(str: string) {
-        this.log = this.log + str + "\n";
-        bb.dispatch(this.EventType.UPDATE_LOG, this.log);
-    };
-    clearLog() {
-        this.log = "";
-        bb.dispatch(this.EventType.UPDATE_LOG, this.log);
     };
 
     addCustom(name: string, callback: () => void) {
@@ -70,9 +61,6 @@ class ConsoleService {
         } else {
             cc.log("todo send cmd to server");
         }
-    };
-    setServerConf(conf) {
-        this.serverConf = conf;
     };
 };
 

@@ -22,6 +22,7 @@ export default class CustomView extends cc.Component {
     };
 
     updateCustomList(customs) {
+        this.content.removeAllChildren();
         for (const i in customs) {
             const element = customs[i];
             var node = cc.instantiate(this.btnPrefab);
@@ -31,5 +32,4 @@ export default class CustomView extends cc.Component {
         }
     }
 
-    // update (dt) {},
-});
+};

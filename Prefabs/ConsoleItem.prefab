@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "ConsoleBtn",
+    "_name": "New Button",
     "_objFlags": 0,
     "_parent": null,
     "_children": [
@@ -28,16 +28,10 @@
       },
       {
         "__id__": 7
-      },
-      {
-        "__id__": 9
-      },
-      {
-        "__id__": 10
       }
     ],
     "_prefab": {
-      "__id__": 11
+      "__id__": 8
     },
     "_opacity": 255,
     "_color": {
@@ -49,7 +43,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 100,
+      "width": 190,
       "height": 40
     },
     "_anchorPoint": {
@@ -61,8 +55,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -310,
-        620,
+        -425,
+        -30,
         0,
         0,
         0,
@@ -116,7 +110,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 100,
+      "width": 190,
       "height": 40
     },
     "_anchorPoint": {
@@ -167,8 +161,8 @@
       }
     ],
     "_useOriginalSize": false,
-    "_string": "Console",
-    "_N$string": "Console",
+    "_string": "button",
+    "_N$string": "button",
     "_fontSize": 20,
     "_lineHeight": 40,
     "_enableWrapText": false,
@@ -184,21 +178,30 @@
     "_id": ""
   },
   {
-    "__type__": "cc.LabelOutline",
+    "__type__": "cc.Widget",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 2
     },
     "_enabled": true,
-    "_color": {
-      "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
-      "a": 255
-    },
-    "_width": 1,
+    "alignMode": 1,
+    "_target": null,
+    "_alignFlags": 40,
+    "_left": 0,
+    "_right": 0,
+    "_top": 0,
+    "_bottom": 0,
+    "_verticalCenter": 0,
+    "_horizontalCenter": 0,
+    "_isAbsLeft": true,
+    "_isAbsRight": true,
+    "_isAbsTop": true,
+    "_isAbsBottom": true,
+    "_isAbsHorizontalCenter": true,
+    "_isAbsVerticalCenter": true,
+    "_originalWidth": 100,
+    "_originalHeight": 0,
     "_id": ""
   },
   {
@@ -207,9 +210,9 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "8addae44-f8c1-420a-89e7-3d26dd118ce9"
+      "__uuid__": "c3744950-b53c-4418-86f8-c978315df6f7"
     },
-    "fileId": "81sAaVKAdKVYP2DtH5hkvU",
+    "fileId": "d6j4nhp8RNFrF6cQ44fTCc",
     "sync": false
   },
   {
@@ -219,8 +222,12 @@
     "node": {
       "__id__": 1
     },
-    "_enabled": false,
-    "_materials": [],
+    "_enabled": true,
+    "_materials": [
+      {
+        "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
+      }
+    ],
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
@@ -252,11 +259,7 @@
     "_grayMaterial": null,
     "duration": 0.1,
     "zoomScale": 1.2,
-    "clickEvents": [
-      {
-        "__id__": 8
-      }
-    ],
+    "clickEvents": [],
     "_N$interactable": true,
     "_N$enableAutoGrayEffect": false,
     "_N$transition": 2,
@@ -327,64 +330,14 @@
     "_id": ""
   },
   {
-    "__type__": "cc.ClickEvent",
-    "target": {
-      "__id__": 1
-    },
-    "component": "",
-    "_componentId": "93953m0sdBLE4PHh1JHU1CS",
-    "handler": "onClick",
-    "customEventData": ""
-  },
-  {
-    "__type__": "cc.Widget",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": true,
-    "alignMode": 1,
-    "_target": null,
-    "_alignFlags": 9,
-    "_left": 0,
-    "_right": 310,
-    "_top": 0,
-    "_bottom": 0,
-    "_verticalCenter": 0,
-    "_horizontalCenter": 0,
-    "_isAbsLeft": true,
-    "_isAbsRight": true,
-    "_isAbsTop": true,
-    "_isAbsBottom": true,
-    "_isAbsHorizontalCenter": true,
-    "_isAbsVerticalCenter": true,
-    "_originalWidth": 100,
-    "_originalHeight": 0,
-    "_id": ""
-  },
-  {
-    "__type__": "93953m0sdBLE4PHh1JHU1CS",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": true,
-    "consoleViewPrefab": {
-      "__uuid__": "ed58be57-c80a-4c72-bd01-c05529394515"
-    },
-    "_id": ""
-  },
-  {
     "__type__": "cc.PrefabInfo",
     "root": {
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "8addae44-f8c1-420a-89e7-3d26dd118ce9"
+      "__uuid__": "c3744950-b53c-4418-86f8-c978315df6f7"
     },
-    "fileId": "07D6L8eK1C8opwXArnQTmq",
+    "fileId": "23d7CCFKdNl6dJjobM2pMe",
     "sync": false
   }
 ]

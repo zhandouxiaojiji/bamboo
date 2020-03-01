@@ -12,6 +12,9 @@ class Http {
         bb.setData("host", host);
         cc.log("Http setHost:", host);
     };
+    getHost() {
+        return this.host;
+    }
     get(api: string, cb?: (response: string, xhr: XMLHttpRequest) => void, err_cb?: (xhr: XMLHttpRequest) => void) {
         if (!this.host) {
             cc.log("host not init");
