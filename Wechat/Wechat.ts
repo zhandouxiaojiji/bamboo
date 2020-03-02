@@ -1,6 +1,22 @@
+import bb from "../bb";
+
+export enum Gender {
+    UNKNOW,
+    MALE,
+    FEMALE,
+}
+
+export interface UserInfo {
+    nickName: string;
+    avatarUrl: string;
+    gender: Gender, //性别 0：未知、1：男、2：女
+    province: string,
+    city: string,
+    country: string,
+}
+
 class Wechat {
-    host: string;
-    userInfo: any;
+    userInfo: UserInfo;
     appId: string;
     openId: string;
     unionId: string;
@@ -11,29 +27,37 @@ class Wechat {
         return cc.sys.platform == cc.sys.WECHAT_GAME
     }
 
-    init(appId: string, host: string) {
+    init(appId: string, serverHost: string) {
         if (!this.canUse()) {
             return;
         }
         this.appId = appId;
-        this.host = host;
-        // this.initUserInfoButton();
         wx.getSetting({
             success: (res) => {
                 console.log(res.authSetting)
                 if (!res.authSetting["scope.userInfo"]) {
                     this.initUserInfoButton();
                 }
-                // res.authSetting = {
-                //   "scope.userInfo": true,
-                //   "scope.userLocation": true
-                // }
             }
         })
     }
 
-    login() {
-        wx.login();
+    getUserInfo() {
+        if (!this.userInfo) {
+            wx.getUserInfo({
+                success: function (res) {
+                    var userInfo = res.userInfo
+                    this.userInfo = {
+                        nickName: userInfo.nickName,
+                        avatarUrl: userInfo.avatarUrl,
+                        gender: userInfo.gender,
+                        province: userInfo.province,
+                        city: userInfo.city,
+                        country: userInfo.country,
+                    }
+                }
+            })
+        }
     }
 
     initUserInfoButton() {
@@ -64,16 +88,6 @@ class Wechat {
                 return;
             }
             this.userInfo = res.userInfo;
-            // cc.loader.load({url: userInfo.avatarUrl, type: 'png'}, (err, texture) => {
-            //     if (err) {
-            //         console.error(err);
-            //         return;
-            //     }
-            //     this.avatar.spriteFrame = new cc.SpriteFrame(texture);
-            // });
-            // wx.getOpenDataContext().postMessage({
-            //     message: "User info get success."
-            // });
             button.hide();
             button.destroy();
         });
@@ -97,20 +111,6 @@ class Wechat {
 
     getMyScore(key: string, cb: any) {
         var localScore = parseInt(cc.sys.localStorage.getItem(key)) || 0;
-        // TODO
-        // wx.getUserInteractiveStorage({
-        //     keyList: [key],
-        //     success: (encryptedData) => {
-        //         console.log("get my encryptedData", encryptedData);
-        //         let data = decryptData(encryptedData, this.iv, this.appId);
-        //         console.log("get my data", data);
-        //         let remoteScore = data[key] || "0";
-        //         cb(parseInt(remoteScore));
-        //         if (localScore < remoteScore) {
-        //             cc.sys.localStorage.setItem(key, remoteScore);
-        //         }
-        //     },
-        // });
         return localScore;
     }
 
