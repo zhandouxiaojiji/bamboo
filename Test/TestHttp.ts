@@ -1,6 +1,6 @@
 import Console from "../Console/ConsoleService";
 import Version from "../Network/Version";
-import Http from "../Network/Http";
+import Network from "../Network/Network";
 import bb from "../bb";
 
 const { ccclass, property } = cc._decorator;
@@ -9,7 +9,7 @@ export default class TestHttp extends cc.Component {
     testPing() {
         Console.addCustom("测试Http", () => {
             cc.log("test http");
-            Http.post("/user/ping", {}, () => {
+            Network.post("/user/ping", {}, () => {
                 cc.log("callback!!");
             });
         });
@@ -18,11 +18,11 @@ export default class TestHttp extends cc.Component {
     testSignIn() {
         Console.addCustom("测试登陆", () => {
             cc.log("test signin")
-            Http.init("https://coding1024.com");
-            Http.post("/user/sign_in", {
+            Network.init("https://coding1024.com");
+            Network.post("/user/sign_in", {
                 acc: "test"
             }, (data: any) => {
-                Http.authorization = data.authorization;
+                Network.authorization = data.authorization;
             })
         })
     };
