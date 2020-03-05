@@ -1,4 +1,5 @@
 import bb from "../bb";
+import { HttpRequest } from "../Network/Http"
 
 export enum Gender {
     UNKNOW,
@@ -129,6 +130,65 @@ class Wechat {
             data,
         });
     }
+
+    async asyncHttpGet(req: HttpRequest) {
+        return new Promise<any>((resolve, reject) => {
+            wx.request({
+                url: req.url,
+                method: "GET",
+                header: { Authorization: req.authorization },
+                data: req.data,
+                success: (res) => {
+                    resolve(res.data);
+                },
+                fail: () => {
+                    reject("post error");
+                }
+            })
+        });
+    }
+    async asyncHttpPost(req: HttpRequest) {
+        return new Promise<any>((resolve, reject) => {
+            wx.request({
+                url: req.url,
+                method: "POST",
+                header: { Authorization: req.authorization },
+                data: req.data,
+                success: (res) => {
+                    resolve(res.data);
+                },
+                fail: () => {
+                    reject("post error");
+                }
+            })
+        });
+    }
+
+    httpGet(req: HttpRequest) {
+        wx.request({
+            url: req.url,
+            method: "GET",
+            header: { Authorization: req.authorization },
+            data: req.data,
+            success: (res) => {
+                req.success && req.success(res.data);
+            },
+            fail: req.fail,
+        })
+    }
+    httpPost(req: HttpRequest) {
+        wx.request({
+            url: req.url,
+            method: "POST",
+            header: { Authorization: req.authorization },
+            data: req.data,
+            success: (res) => {
+                req.success && req.success(res.data);
+            },
+            fail: req.fail,
+        })
+    }
+
 }
 
 export default new Wechat();

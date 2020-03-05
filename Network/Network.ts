@@ -1,4 +1,6 @@
 import bb from "../bb";
+import Http, { HttpRequest } from "./Http";
+import Wechat from "../Wechat/Wechat";
 
 class Network {
     host: string;
@@ -7,32 +9,50 @@ class Network {
     init(host: string) {
         this.host = bb.getData("host", host);
         cc.log("init host:", this.host);
-    };
+    }
+
     setHost(host) {
         this.host = host;
         bb.setData("host", host);
         cc.log("Http setHost:", host);
-    };
+    }
+
     getHost() {
         return this.host;
     }
+
+    private urlWithHost(req: HttpRequest) {
+        const newReq: HttpRequest = {
+            url: this.host + req.url,
+            data: req.data,
+            authorization: req.authorization,
+        }
+        return newReq;
+    }
+
     login(account?: string) {
         if (cc.sys.platform == cc.sys.WECHAT_GAME) {
             wx.login({
                 success: (res) => {
                     if (res.code) {
-                        //发起网络请求
-                        this.post('/center/wechat/openid', {
-                            platform: "WECHAT_GAME",
-                            jscode: res.code
-                        }, ({ data, statusCode }) => {
-                            console.log("login success", data);
-                            this.acc = data.openid;
-
-                        }, (failRes) => {
-                            bb.notify("登录失败");
-                            console.log("login fail", failRes)
-                        })
+                        (async () => {
+                            var resp = await this.asyncHttpPost({
+                                url: '/center/wechat/openid',
+                                data: {
+                                    platform: "WECHAT_GAME",
+                                    jscode: res.code
+                                }
+                            });
+                            this.acc = resp.openid;
+                            var resp = await this.asyncHttpPost({
+                                url: '/center/user/authorization',
+                                data: {
+                                    acc: this.acc
+                                }
+                            });
+                            this.authorization = resp.authorization;
+                            console.log(`login success, acc:${this.acc}, authorization:${this.authorization}`);
+                        })()
                     } else {
                         console.log('登录失败！' + res.errMsg)
                     }
@@ -42,91 +62,55 @@ class Network {
             // TODO sdkbox login
         } else {
             this.acc = bb.getData("testAccount", account || "test");
-            this.post("/center/user/token", {acc: this.acc}, (res) => {
-                console.log("login res", res)
-                this.authorization = res.authorization;
-            })
+            (async () => {
+                var resp = await this.asyncHttpPost({
+                    url: '/center/user/authorization',
+                    data: {
+                        acc: this.acc
+                    }
+                });
+                this.authorization = resp.authorization;
+                console.log(`login success, acc:${this.acc}, authorization:${this.authorization}`);
+            })()
         }
     }
 
-    get(api: string, success?: (response: string, xhr: XMLHttpRequest) => void, fail?: (xhr: XMLHttpRequest) => void) {
-        if (!this.host) {
-            cc.log("host not init");
-            return;
-        }
-        console.log("Http get", api);
-        const url = this.host + api
+    async asyncHttpGet(req: HttpRequest) {
+        console.log("Http async get", req);
+        const newReq = this.urlWithHost(req);
         if (cc.sys.platform == cc.sys.WECHAT_GAME) {
-            wx.request({
-                method: "POST",
-                header: { Authorization: this.authorization },
-                url,
-                success,
-                fail
-            })
-            return;
+            return Wechat.asyncHttpGet(this.urlWithHost(newReq));
         }
-
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", this.host + api, true);
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4 && (xhr.status >= 200 && xhr.status < 400)) {
-                var response = JSON.parse(xhr.responseText);
-                cc.log(response);
-                if (success) {
-                    success(response, xhr);
-                }
-            } else if (xhr.status < 200 || xhr.status >= 400) {
-                if (fail) {
-                    fail(xhr);
-                }
-            }
-        };
-        xhr.send();
-        return xhr;
-    };
-    post(api: string, data: any, success?: (response: any, xhr: XMLHttpRequest) => void, fail?: (xhr: XMLHttpRequest) => void) {
-        const url = this.host + api
-        if (!this.host) {
-            cc.log("host not init");
-            return;
-        }
-        console.log("Http post:", api);
-        if (cc.sys.platform == cc.sys.WECHAT_GAME) {
-            wx.request({
-                method: "POST",
-                header: { Authorization: this.authorization },
-                url,
-                data,
-                success,
-                fail
-            })
-            return;
-        }
-
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", url, true);
-        if(this.authorization) {
-            xhr.setRequestHeader("Content-type", "application/json");
-            xhr.setRequestHeader("Authorization", this.authorization);
-        }
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4 && (xhr.status >= 200 && xhr.status < 400)) {
-                var response = JSON.parse(xhr.responseText);
-                cc.log("Response", response);
-                if (success) {
-                    success(response, xhr);
-                }
-            } else if (xhr.status < 200 || xhr.status >= 400) {
-                cc.log("Network error", xhr.readyState, xhr.status);
-                if (fail) {
-                    fail(xhr);
-                }
-            }
-        };
-        xhr.send(JSON.stringify(data));
-        return xhr;
+        return Http.asyncGet(newReq);
     }
+    async asyncHttpPost(req: HttpRequest) {
+        console.log("Http async post", req);
+        const newReq = this.urlWithHost(req);
+        if (cc.sys.platform == cc.sys.WECHAT_GAME) {
+            return Wechat.asyncHttpPost(newReq);
+        }
+        return Http.asyncPost(newReq);
+    }
+
+    httpGet(req: HttpRequest) {
+        console.log("Http get");
+        const newReq = this.urlWithHost(req);
+        if (cc.sys.platform == cc.sys.WECHAT_GAME) {
+            Wechat.httpGet(newReq);
+            return;
+        }
+        Http.get(req);
+    }
+    httpPost(req: HttpRequest) {
+        console.log("Http post");
+        const newReq = this.urlWithHost(req);
+        if (cc.sys.platform == cc.sys.WECHAT_GAME) {
+            Wechat.httpPost(newReq);
+            return;
+        }
+        Http.post(req);
+    }
+
 };
 
 export default new Network();

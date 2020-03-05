@@ -2,27 +2,23 @@ import Console from "../Console/ConsoleService";
 import Version from "../Network/Version";
 import Network from "../Network/Network";
 import bb from "../bb";
+import Http from "../Network/Http";
 
 const { ccclass, property } = cc._decorator;
 @ccclass
 export default class TestHttp extends cc.Component {
-    testPing() {
-        Console.addCustom("测试Http", () => {
-            cc.log("test http");
-            Network.post("/user/ping", {}, () => {
-                cc.log("callback!!");
-            });
-        });
-    };
-
     testSignIn() {
         Console.addCustom("测试登陆", () => {
             cc.log("test signin")
             Network.init("https://coding1024.com");
-            Network.post("/user/sign_in", {
-                acc: "test"
-            }, (data: any) => {
-                Network.authorization = data.authorization;
+            Network.httpPost({
+                url: "/user/sign_in",
+                data: {
+                    acc: "test"
+                },
+                success: (data: any) => {
+                    Network.authorization = data.authorization;
+                }
             })
         })
     };
@@ -38,9 +34,23 @@ export default class TestHttp extends cc.Component {
         });
     };
 
+    testRpc() {
+        Console.addCustom("Test Rpc", () => {
+            (async () => {
+                var resp = await Http.asyncPost({
+                    url: "https://mini.coding1024.com/center/user/token",
+                    data: {
+                        acc: "test"
+                    },
+                });
+                console.log("rpc resp", resp);
+            })();
+        })
+    }
+
     start() {
-        this.testPing();
         this.testSignIn();
         this.testVersion();
+        this.testRpc();
     };
 };
