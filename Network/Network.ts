@@ -25,7 +25,7 @@ class Network {
         const newReq: HttpRequest = {
             url: this.host + req.url,
             data: req.data,
-            authorization: req.authorization,
+            authorization: this.authorization,
         }
         return newReq;
     }
@@ -109,6 +109,24 @@ class Network {
             return;
         }
         Http.post(req);
+    }
+
+    async getKV(key: string) {
+        return this.asyncHttpPost({
+            url: "/center/user/get_value",
+            data: {
+                key
+            }
+        });
+    }
+    async setKV(key: string, value?: string) {
+        return this.asyncHttpPost({
+            url: "/center/user/set_value",
+            data: {
+                key,
+                value,
+            }
+        });
     }
 
 };
