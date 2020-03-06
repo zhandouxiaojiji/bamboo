@@ -1,4 +1,3 @@
-import bb from "../bb";
 import { HttpRequest } from "../Network/Http"
 
 export enum Gender {
@@ -28,37 +27,72 @@ class Wechat {
         return cc.sys.platform == cc.sys.WECHAT_GAME
     }
 
-    init(appId: string, serverHost: string) {
+    init(appId: string) {
         if (!this.canUse()) {
             return;
         }
         this.appId = appId;
-        wx.getSetting({
-            success: (res) => {
-                console.log(res.authSetting)
-                if (!res.authSetting["scope.userInfo"]) {
-                    this.initUserInfoButton();
-                }
-            }
-        })
     }
 
-    getUserInfo() {
-        if (!this.userInfo) {
-            wx.getUserInfo({
-                success: function (res) {
-                    var userInfo = res.userInfo
-                    this.userInfo = {
-                        nickName: userInfo.nickName,
-                        avatarUrl: userInfo.avatarUrl,
-                        gender: userInfo.gender,
-                        province: userInfo.province,
-                        city: userInfo.city,
-                        country: userInfo.country,
+    async getUserInfo() {
+        return new Promise<any>((resolve) => {
+            if (this.userInfo) {
+                resolve(this.userInfo);
+                return;
+            }
+            wx.getSetting({
+                success: (res) => {
+                    console.log(res.authSetting)
+                    if (res.authSetting["scope.userInfo"]) {
+                        wx.getUserInfo({
+                            success: (res) => {
+                                var userInfo = res.userInfo
+                                this.userInfo = {
+                                    nickName: userInfo.nickName,
+                                    avatarUrl: userInfo.avatarUrl,
+                                    gender: userInfo.gender,
+                                    province: userInfo.province,
+                                    city: userInfo.city,
+                                    country: userInfo.country,
+                                };
+                                resolve(this.userInfo);
+                            }
+                        })
+                    } else {
+                        let systemInfo = wx.getSystemInfoSync();
+                        let width = systemInfo.windowWidth;
+                        let height = systemInfo.windowHeight;
+                        let button = wx.createUserInfoButton({
+                            type: 'text',
+                            text: '',
+                            style: {
+                                left: 0,
+                                top: 0,
+                                width: width,
+                                height: height,
+                                lineHeight: 40,
+                                backgroundColor: '#00000000',
+                                color: '#00000000',
+                                textAlign: 'center',
+                                fontSize: 10,
+                                borderRadius: 4
+                            }
+                        });
+
+                        button.onTap((res) => {
+                            let userInfo = res.userInfo;
+                            if (!userInfo) {
+                                console.log(res.errMsg);
+                                return;
+                            }
+                            this.userInfo = res.userInfo;
+                            button.hide();
+                            button.destroy();
+                        });
                     }
                 }
             })
-        }
+        });
     }
 
     initUserInfoButton() {
