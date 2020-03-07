@@ -1,11 +1,19 @@
 import bb from "../bb";
-import Http, { HttpRequest } from "./Http";
+import Http, { HttpRequest } from "../Network/Http";
 import Wechat from "../Wechat/Wechat";
+import def from "../../script/Def/def";
+
+export interface UserInfo {
+    avatar?: string;
+    nickname: string;
+}
 
 class Network {
     host: string;
     acc: string;
     authorization: string;
+    userInfo: UserInfo;
+
     init(host: string) {
         this.host = bb.getData("host", host);
         cc.log("init host:", this.host);
@@ -91,10 +99,10 @@ class Network {
         }
         if (resp.err == 4) {
             let authorization = await this.login();
-            if(authorization) {
+            if (authorization) {
                 return this.asyncHttpGet(req);
             } else {
-                throw new Error ("login fail");
+                throw new Error("login fail");
             }
         }
         return resp;
@@ -110,10 +118,10 @@ class Network {
         }
         if (resp.err == 4) {
             let authorization = await this.login();
-            if(authorization) {
+            if (authorization) {
                 return this.asyncHttpPost(req);
             } else {
-                throw new Error ("login fail");
+                throw new Error("login fail");
             }
         }
         return resp;
@@ -138,14 +146,35 @@ class Network {
         Http.post(req);
     }
 
+    async getUserInfo() {
+        if (!this.userInfo) {
+            if (cc.sys.platform == cc.sys.WECHAT_GAME) {
+                const wxInfo = await Wechat.getUserInfo();
+                this.userInfo = {
+                    avatar: wxInfo.avatar,
+                    nickname: wxInfo.nickname
+                }
+            } else if (cc.sys.isNative) {
+                // TODO
+            } else {
+                this.userInfo = {
+                    nickname: this.acc
+                }
+            }
+        }
+        return this.userInfo;
+    }
+
     async getKV(key: string) {
         try {
             const resp = await this.asyncHttpPost({
                 url: "/center/user/get_value",
                 data: {
+                    app: def.APPNAME,
                     key
                 }
             });
+            cc.sys.localStorage.setItem(key, resp.value);
             return resp.value;
         } catch (error) {
             console.log("网络异常，取本地数据");
@@ -157,6 +186,7 @@ class Network {
         return this.asyncHttpPost({
             url: "/center/user/set_value",
             data: {
+                app: def.APPNAME,
                 key,
                 value,
             }
