@@ -25,6 +25,9 @@ class ConsoleService {
             bb.notify(`指令列表:${str}`);
             console.log(`指令列表:${str}`);
         });
+        this.addCmd("account", (acc) => {
+            bb.setData("testAccount", acc);
+        })
     };
 
     addCustom(name: string, callback: () => void) {

@@ -1,7 +1,7 @@
 import bb from "../bb";
 import Http, { HttpRequest } from "../Network/Http";
 import Wechat from "../Wechat/Wechat";
-import def from "../../script/Def/def";
+import Rank from "./Rank";
 
 export interface UserInfo {
     avatarUrl?: string;
@@ -165,12 +165,12 @@ class Network {
         return this.userInfo;
     }
 
-    async getKV(key: string) {
+    async getKV(key: string, appname?: string) {
         try {
             const resp = await this.asyncHttpPost({
                 url: "/center/user/get_value",
                 data: {
-                    app: def.APPNAME,
+                    appname,
                     key
                 }
             });
@@ -181,12 +181,12 @@ class Network {
             return cc.sys.localStorage.getItem(key);
         }
     }
-    async setKV(key: string, value?: string) {
+    async setKV(key: string, value?: string, appname?: string) {
         cc.sys.localStorage.setItem(key, value);
         return this.asyncHttpPost({
             url: "/center/user/set_value",
             data: {
-                app: def.APPNAME,
+                appname,
                 key,
                 value,
             }

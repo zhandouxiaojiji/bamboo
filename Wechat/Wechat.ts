@@ -83,9 +83,19 @@ class Wechat {
                             let userInfo = res.userInfo;
                             if (!userInfo) {
                                 console.log(res.errMsg);
+                                const tmp: UserInfo = {
+                                    nickName: '',
+                                    avatarUrl: '',
+                                    gender: Gender.UNKNOW,
+                                    province: '',
+                                    city: '',
+                                    country: '',
+                                }
+                                resolve(tmp);
                                 return;
                             }
                             this.userInfo = res.userInfo;
+                            resolve(this.userInfo);
                             button.hide();
                             button.destroy();
                         });
