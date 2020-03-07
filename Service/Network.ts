@@ -4,8 +4,8 @@ import Wechat from "../Wechat/Wechat";
 import def from "../../script/Def/def";
 
 export interface UserInfo {
-    avatar?: string;
-    nickname: string;
+    avatarUrl?: string;
+    nickName: string;
 }
 
 class Network {
@@ -151,14 +151,14 @@ class Network {
             if (cc.sys.platform == cc.sys.WECHAT_GAME) {
                 const wxInfo = await Wechat.getUserInfo();
                 this.userInfo = {
-                    avatar: wxInfo.avatar,
-                    nickname: wxInfo.nickname
+                    avatarUrl: wxInfo.avatarUrl,
+                    nickName: wxInfo.nickName
                 }
             } else if (cc.sys.isNative) {
                 // TODO
             } else {
                 this.userInfo = {
-                    nickname: this.acc
+                    nickName: this.acc
                 }
             }
         }

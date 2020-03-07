@@ -1,10 +1,13 @@
 import Network from "../Service/Network";
 
 export interface RankItemModel {
-  rank: number;
-  nickName: string;
-  avatarUrl: string;
-  value: number;
+  k: string;
+  v: {
+    rank: number;
+    nickName: string;
+    avatarUrl: string;
+    score: number;
+  }
 }
 
 class Rank {
@@ -28,13 +31,13 @@ class Rank {
     }
   }
 
-  async submitScore(appname: string, rankname: string, score: number) {
+  async submitScore(appname: string, rankname: string, item: any) {
     return Network.asyncHttpPost({
         url: "/center/rank/submit",
         data: {
           appname,
           rankname,
-          score,
+          item,
         }
     })
 }
