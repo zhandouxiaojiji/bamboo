@@ -1,6 +1,6 @@
 import Console from "../Console/ConsoleService";
-import Version from "../Network/Version";
-import Network from "../Network/Network";
+import Version from "../Service/Version";
+import Network from "../Service/Network";
 import bb from "../bb";
 import Http from "../Network/Http";
 

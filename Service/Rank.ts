@@ -32,9 +32,9 @@ class Rank {
         });
       }
       if (!this.myData[rankname]) {
-        let userInfo = await Network.getUserInfo();
+        let userInfo = Network.userInfo;
         let score = await Network.getKV(rankname, appname);
-        if (score) {
+        if (userInfo && score) {
           this.myData[rankname] = {
             k: Network.acc,
             v: {

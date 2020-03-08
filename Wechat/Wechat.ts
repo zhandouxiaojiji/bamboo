@@ -79,25 +79,21 @@ class Wechat {
                             }
                         });
 
+                        console.log("wx button", button);
+
                         button.onTap((res) => {
                             let userInfo = res.userInfo;
                             if (!userInfo) {
                                 console.log(res.errMsg);
-                                const tmp: UserInfo = {
-                                    nickName: '',
-                                    avatarUrl: '',
-                                    gender: Gender.UNKNOW,
-                                    province: '',
-                                    city: '',
-                                    country: '',
-                                }
-                                resolve(tmp);
+                                button.hide();
+                                button.destroy();
+                                resolve();
                                 return;
                             }
                             this.userInfo = res.userInfo;
-                            resolve(this.userInfo);
                             button.hide();
                             button.destroy();
+                            resolve(this.userInfo);
                         });
                     }
                 }
@@ -192,6 +188,7 @@ class Wechat {
         });
     }
     async asyncHttpPost(req: HttpRequest) {
+        console.log("wechat post", req);
         return new Promise<any>((resolve, reject) => {
             wx.request({
                 url: req.url,

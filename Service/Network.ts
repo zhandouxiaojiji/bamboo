@@ -72,7 +72,7 @@ class Network {
                 // TODO sdkbox login
                 resolve(this.authorization);
             } else {
-                this.acc = bb.getData("testAccount", account || "test");
+                this.acc = account || 'test';
                 (async () => {
                     var resp = await this.asyncHttpPost({
                         url: '/center/user/authorization',
@@ -93,7 +93,7 @@ class Network {
         var resp;
         const newReq = this.urlWithHost(req);
         if (cc.sys.platform == cc.sys.WECHAT_GAME) {
-            resp = await Wechat.asyncHttpGet(this.urlWithHost(newReq));
+            resp = await Wechat.asyncHttpGet(newReq);
         } else {
             resp = await Http.asyncGet(newReq);
         }
@@ -112,7 +112,7 @@ class Network {
         var resp;
         const newReq = this.urlWithHost(req);
         if (cc.sys.platform == cc.sys.WECHAT_GAME) {
-            resp = await Wechat.asyncHttpPost(this.urlWithHost(newReq));
+            resp = await Wechat.asyncHttpPost(newReq);
         } else {
             resp = await Http.asyncPost(newReq);
         }
@@ -150,9 +150,11 @@ class Network {
         if (!this.userInfo) {
             if (cc.sys.platform == cc.sys.WECHAT_GAME) {
                 const wxInfo = await Wechat.getUserInfo();
-                this.userInfo = {
-                    avatarUrl: wxInfo.avatarUrl,
-                    nickName: wxInfo.nickName
+                if(wxInfo){
+                    this.userInfo = {
+                        avatarUrl: wxInfo.avatarUrl,
+                        nickName: wxInfo.nickName
+                    }
                 }
             } else if (cc.sys.isNative) {
                 // TODO
