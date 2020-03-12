@@ -34,7 +34,7 @@ class Wechat {
         this.appId = appId;
     }
 
-    async getUserInfo() {
+    async getUserInfo(askPrefab: cc.Prefab) {
         return new Promise<any>((resolve) => {
             if (this.userInfo) {
                 resolve(this.userInfo);
@@ -79,9 +79,19 @@ class Wechat {
                             }
                         });
 
+                        var askNode: cc.Node;
+                        if (askPrefab) {
+                            askNode = cc.instantiate(askPrefab);
+                            const canvas = cc.find('Canvas');
+                            canvas.addChild(askNode);
+                        }
+
                         console.log("wx button", button);
 
                         button.onTap((res) => {
+                            if (askNode) {
+                                askNode.removeFromParent();
+                            }
                             let userInfo = res.userInfo;
                             if (!userInfo) {
                                 console.log(res.errMsg);

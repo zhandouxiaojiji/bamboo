@@ -146,10 +146,10 @@ class Network {
         Http.post(req);
     }
 
-    async getUserInfo() {
+    async getUserInfo(askPrefab?: cc.Prefab) {
         if (!this.userInfo) {
             if (cc.sys.platform == cc.sys.WECHAT_GAME) {
-                const wxInfo = await Wechat.getUserInfo();
+                const wxInfo = await Wechat.getUserInfo(askPrefab);
                 if(wxInfo){
                     this.userInfo = {
                         avatarUrl: wxInfo.avatarUrl,

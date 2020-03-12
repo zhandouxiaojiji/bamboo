@@ -1,4 +1,5 @@
 import Network from "../Service/Network";
+import User from "../../script/Game/User";
 
 export interface RankItemModel {
   k: string;
@@ -33,7 +34,7 @@ class Rank {
       }
       if (!this.myData[rankname]) {
         let userInfo = Network.userInfo;
-        let score = await Network.getKV(rankname, appname);
+        let score = await User.getScore(rankname);
         if (userInfo && score) {
           this.myData[rankname] = {
             k: Network.acc,
