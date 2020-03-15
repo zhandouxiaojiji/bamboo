@@ -1,5 +1,5 @@
 import Network from "../Service/Network";
-import User from "../../script/Game/User";
+import User from "./User";
 
 export interface RankItemModel {
   k: string;

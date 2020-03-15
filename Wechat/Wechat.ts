@@ -34,7 +34,7 @@ class Wechat {
         this.appId = appId;
     }
 
-    async getUserInfo(askPrefab: cc.Prefab) {
+    async getUserInfo(askPrefab?: cc.Prefab) {
         return new Promise<any>((resolve) => {
             if (this.userInfo) {
                 resolve(this.userInfo);
