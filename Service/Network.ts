@@ -38,7 +38,7 @@ class Network {
         return newReq;
     }
 
-    async login(account?: string) {
+    async login(appname?: string, account?: string) {
         return new Promise<any>((resolve, reject) => {
             if (cc.sys.platform == cc.sys.WECHAT_GAME) {
                 wx.login({
@@ -48,8 +48,8 @@ class Network {
                                 var resp = await this.asyncHttpPost({
                                     url: '/center/wechat/openid',
                                     data: {
-                                        platform: "WECHAT_GAME",
-                                        jscode: res.code
+                                        jscode: res.code,
+                                        appname,
                                     }
                                 });
                                 this.acc = resp.openid;

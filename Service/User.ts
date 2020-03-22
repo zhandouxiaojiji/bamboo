@@ -1,5 +1,5 @@
 import Network from "../../bamboo/Service/Network";
-import def from "../Def/def";
+import def from "../../script/Def/def";
 
 class User {
   scores: {[key: string]: number} = {}
