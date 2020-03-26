@@ -11,19 +11,20 @@ class Ad {
       return;
     }
   }
-  async showBanner(name: string) {
+  
+  showBanner(name: string) {
     if(cc.sys.platform == cc.sys.WECHAT_GAME) {
       return WechatAd.showBanner(name);
     }
   }
   
-  async hideBanner(name: string) {
+  hideBanner(name: string) {
     if(cc.sys.platform == cc.sys.WECHAT_GAME) {
       return WechatAd.hideBanner(name);
     }
   }
   
-  async showInterstitial(name: string) {
+  showInterstitial(name: string) {
     if(cc.sys.platform == cc.sys.WECHAT_GAME) {
       return WechatAd.showInterstitial(name);
     }

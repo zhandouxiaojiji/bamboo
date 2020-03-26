@@ -16,7 +16,7 @@ export interface WechatAdConf {
   adName: string;
   adType: WechatAdType;
   adUnitId: string;
-  style: WechatAdStyle;
+  style?: WechatAdStyle;
 }
 
 export interface WechatAdUnit {
@@ -45,6 +45,13 @@ class WechatAd {
           unit.ad = wx.createInterstitialAd({
             adUnitId: conf.adUnitId,
           });
+          unit.ad.onLoad(() => {
+            console.log(`wechat interstitial ad ${name} is ready`);
+            unit.canUse = true;
+          });
+          unit.ad.onError(err => {
+            console.log(`wechat interstitial ad ${name} error ${err}`)
+          })
           break;
         case WechatAdType.REWARDED:
           unit.ad = wx.createRewardedVideoAd({
@@ -95,14 +102,9 @@ class WechatAd {
           console.log("err", err);
         });
       }
-      if (unit.canUse) {
-        return true;
-      } else {
-        console.log(`wechat banner ${name} not ready`);
-        return false;
-      }
+      return true;
     } else {
-      console.log("ad", name, "not exist");
+      console.log(`ad ${name} not exist`);
       return false;
     }
   }
@@ -118,19 +120,28 @@ class WechatAd {
         return false;
       }
     } else {
-      console.log("ad", name, "not exist");
+      console.log(`ad ${name} not exist`);
       return false;
     }
   }
 
-  async showInterstitial(name: string) {
-    return new Promise<Boolean>((resolve, reject) => {
-      let ad = this.units[name];
-      if (!ad) {
-        return reject(false);
+  showInterstitial(name: string) {
+    let unit = this.units[name];
+    if(unit) {
+      if (unit.canUse) {
+        console.log(`wecaht showInterstitial ${name}`);
+        unit.ad.show().catch((err) => {
+          console.error(`wecaht showInterstitial ${name} error ${err}`);
+        });
+        return true;
+      } else {
+        console.log(`wechat interstital ${name} not ready`);
+        return false;
       }
-      return ad.show();
-    });
+    }else {
+      console.log(`ad ${name} not exist`);
+      return false;
+    }
   }
 
   async showRewarded(name: string) {
