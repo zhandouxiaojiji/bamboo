@@ -56,7 +56,15 @@ class WechatAd {
         case WechatAdType.REWARDED:
           unit.ad = wx.createRewardedVideoAd({
             adUnitId: conf.adUnitId,
+          });
+          unit.ad.onLoad(() => {
+            console.log(`wechat rewarded ad ${name} is ready`);
+            unit.canUse = true;
+          });
+          unit.ad.onError(err => {
+            console.log(`wechat rewarded ad ${name} error ${err}`)
           })
+          break;
       }
     }
   }
@@ -93,7 +101,7 @@ class WechatAd {
         });
         bannerAd.show();
         bannerAd.onResize(res => {
-          if(unit.conf.style.bottom != undefined) {
+          if (unit.conf.style.bottom != undefined) {
             bannerAd.style.top = systemInfo.windowHeight - bannerAd.style.realHeight - 5 - unit.conf.style.bottom;
           };
           unit.canUse = true;
@@ -127,7 +135,7 @@ class WechatAd {
 
   showInterstitial(name: string) {
     let unit = this.units[name];
-    if(unit) {
+    if (unit) {
       if (unit.canUse) {
         console.log(`wecaht showInterstitial ${name}`);
         unit.ad.show().catch((err) => {
@@ -138,7 +146,7 @@ class WechatAd {
         console.log(`wechat interstital ${name} not ready`);
         return false;
       }
-    }else {
+    } else {
       console.log(`ad ${name} not exist`);
       return false;
     }
@@ -146,11 +154,32 @@ class WechatAd {
 
   async showRewarded(name: string) {
     return new Promise<Boolean>((resolve, reject) => {
-      let ad = this.units[name];
-      if (!ad) {
-        return reject(false);
+      let unit = this.units[name];
+      if (!unit || !unit.canUse) {
+        return resolve(false);
       }
-      return ad.show();
+      const ad = unit.ad;
+      ad.onClose(res => {
+        // 用户点击了【关闭广告】按钮
+        // 小于 2.1.0 的基础库版本，res 是一个 undefined
+        if (res && res.isEnded || res === undefined) {
+          // 正常播放结束，可以下发游戏奖励
+          return resolve(true);
+        }
+        else {
+          // 播放中途退出，不下发游戏奖励
+          return resolve(false);
+        }
+      })
+      ad.show().catch(() => {
+        // 失败重试
+        ad.load()
+          .then(() => ad.show())
+          .catch(err => {
+            console.log('激励视频 广告显示失败')
+            return resolve(false);
+          })
+      });
     });
   }
 }
