@@ -1,3 +1,5 @@
+import bb from "../bb";
+
 export enum WechatAdType {
   BANNER,
   INTERSTITIAL,
@@ -94,21 +96,23 @@ class WechatAd {
     if (unit) {
       if (!unit.ad) {
         const systemInfo = wx.getSystemInfoSync();
-        let bannerAd = wx.createBannerAd({
+        unit.ad = wx.createBannerAd({
           adUnitId: unit.conf.adUnitId,
           adIntervals: 30,
           style: this.translateStyle(unit.conf.style),
         });
-        bannerAd.show();
-        bannerAd.onResize(res => {
+        unit.ad.show();
+        unit.ad.onResize(res => {
           if (unit.conf.style.bottom != undefined) {
-            bannerAd.style.top = systemInfo.windowHeight - bannerAd.style.realHeight - 5 - unit.conf.style.bottom;
+            unit.ad.style.top = systemInfo.windowHeight - unit.ad.style.realHeight - 5 - unit.conf.style.bottom;
           };
           unit.canUse = true;
         });
-        bannerAd.onError(err => {
+        unit.ad.onError(err => {
           console.log("err", err);
         });
+      } else {
+        unit.ad.show();
       }
       return true;
     } else {
@@ -156,6 +160,7 @@ class WechatAd {
     return new Promise<Boolean>((resolve, reject) => {
       let unit = this.units[name];
       if (!unit || !unit.canUse) {
+        bb.notify("暂时没有广告哦~");
         return resolve(false);
       }
       const ad = unit.ad;
@@ -177,6 +182,7 @@ class WechatAd {
           .then(() => ad.show())
           .catch(err => {
             console.log('激励视频 广告显示失败')
+            bb.notify("暂时没有广告哦~");
             return resolve(false);
           })
       });

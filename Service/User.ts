@@ -10,7 +10,7 @@ class User {
   async getScore(key: string) {
     if (this.scores[key] == undefined) {
       const value = await Network.getKV(key, this.appname);
-      this.scores[key] = parseInt(value);
+      this.scores[key] = parseInt(value || "0");
     }
     return this.scores[key];
   }
