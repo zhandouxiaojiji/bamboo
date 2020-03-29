@@ -1,7 +1,7 @@
 import bb from "../bb";
 import Http, { HttpRequest } from "../Network/Http";
 import Wechat from "../Wechat/Wechat";
-import Rank from "./Rank";
+import SdkboxPlay from "../SDKBox/SdkboxPlay";
 
 export interface UserInfo {
     avatarUrl?: string;
@@ -16,7 +16,10 @@ class Network {
 
     init(host: string) {
         this.host = bb.getData("host", host);
-        cc.log("init host:", this.host);
+        console.log("init host:", this.host);
+        if (cc.sys.isNative) {
+            SdkboxPlay.init();
+        }
     }
 
     setHost(host) {
@@ -40,6 +43,18 @@ class Network {
 
     async login(appname?: string, account?: string) {
         return new Promise<any>((resolve, reject) => {
+            const reqAuth = async () => {
+                var resp = await this.asyncHttpPost({
+                    url: '/center/user/authorization',
+                    data: {
+                        acc: this.acc
+                    }
+                });
+                this.authorization = resp.authorization;
+                resolve(this.authorization);
+                console.log(`login success, acc:${this.acc}, authorization:${this.authorization}`);
+
+            }
             if (cc.sys.platform == cc.sys.WECHAT_GAME) {
                 wx.login({
                     success: (res) => {
@@ -53,15 +68,7 @@ class Network {
                                     }
                                 });
                                 this.acc = resp.openid;
-                                var resp = await this.asyncHttpPost({
-                                    url: '/center/user/authorization',
-                                    data: {
-                                        acc: this.acc
-                                    }
-                                });
-                                this.authorization = resp.authorization;
-                                resolve(this.authorization);
-                                console.log(`login success, acc:${this.acc}, authorization:${this.authorization}`);
+                                reqAuth();
                             })()
                         } else {
                             console.log('登录失败！' + res.errMsg)
@@ -69,21 +76,13 @@ class Network {
                     }
                 })
             } else if (cc.sys.isNative) {
-                // TODO sdkbox login
-                resolve(this.authorization);
+                (async () => {
+                    this.acc = await SdkboxPlay.signin();
+                    reqAuth();
+                })();
             } else {
                 this.acc = account || 'test';
-                (async () => {
-                    var resp = await this.asyncHttpPost({
-                        url: '/center/user/authorization',
-                        data: {
-                            acc: this.acc
-                        }
-                    });
-                    this.authorization = resp.authorization;
-                    resolve(this.authorization);
-                    console.log(`login success, acc:${this.acc}, authorization:${this.authorization}`);
-                })();
+                reqAuth();
             }
         });
     }
@@ -150,7 +149,7 @@ class Network {
         if (!this.userInfo) {
             if (cc.sys.platform == cc.sys.WECHAT_GAME) {
                 const wxInfo = await Wechat.getUserInfo(askPrefab);
-                if(wxInfo){
+                if (wxInfo) {
                     this.userInfo = {
                         avatarUrl: wxInfo.avatarUrl,
                         nickName: wxInfo.nickName

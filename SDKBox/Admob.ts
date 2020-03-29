@@ -15,75 +15,73 @@ class Admob {
 
         var callback = (cbs, name) => {
             var cb = cbs[name]
-            if(cb){
+            if (cb) {
                 cb();
             }
         }
-        
-        cc.log("bb.Admob init");
-        if (cc.sys.isNative) {
-            sdkbox.PluginAdMob.setListener({
-                adViewDidReceiveAd: (name) => {
-                    cc.log('adViewDidReceiveAd name=' + name);
-                    callback(this.loadCallbacks, name);
-                },
-                adViewDidFailToReceiveAdWithError: (name, msg) => {
-                    cc.log('adViewDidFailToReceiveAdWithError name=' + name + ' msg=' + msg);
-                    callback(this.failCallbacks, name);
-                },
-                adViewWillPresentScreen: (name) => {
-                    cc.log('adViewWillPresentScreen name=' + name);
-                    callback(this.fullScreenCallbacks, name);
-                },
-                adViewDidDismissScreen: (name) => {
-                    cc.log('adViewDidDismissScreen name=' + name);
-                    callback(this.dismissScreenCallbacks, name)
-                },
-                adViewWillDismissScreen: (name) => {
-                    cc.log('adViewWillDismissScreen=' + name);
-                },
-                adViewWillLeaveApplication: (name) => {
-                    cc.log('adViewWillLeaveApplication=' + name);
-                },
-                reward: (name, currency, amount) => {
-                    cc.log('reward:' + name + ',' + currency + ',' + amount);
-                    var cb = this.rewardCallbacks[name];
-                    if (cb) {
-                        cb(currency, amount);
-                    }
+
+        console.log("bb.Admob init");
+        sdkbox.PluginAdMob.setListener({
+            adViewDidReceiveAd: (name) => {
+                console.log('adViewDidReceiveAd name=' + name);
+                callback(this.loadCallbacks, name);
+            },
+            adViewDidFailToReceiveAdWithError: (name, msg) => {
+                console.log('adViewDidFailToReceiveAdWithError name=' + name + ' msg=' + msg);
+                callback(this.failCallbacks, name);
+            },
+            adViewWillPresentScreen: (name) => {
+                console.log('adViewWillPresentScreen name=' + name);
+                callback(this.fullScreenCallbacks, name);
+            },
+            adViewDidDismissScreen: (name) => {
+                console.log('adViewDidDismissScreen name=' + name);
+                callback(this.dismissScreenCallbacks, name)
+            },
+            adViewWillDismissScreen: (name) => {
+                console.log('adViewWillDismissScreen=' + name);
+            },
+            adViewWillLeaveApplication: (name) => {
+                console.log('adViewWillLeaveApplication=' + name);
+            },
+            reward: (name, currency, amount) => {
+                console.log('reward:' + name + ',' + currency + ',' + amount);
+                var cb = this.rewardCallbacks[name];
+                if (cb) {
+                    cb(currency, amount);
                 }
-            });
-            sdkbox.PluginAdMob.init();
-        }
+            }
+        });
+        sdkbox.PluginAdMob.init();
     };
 
     cache(name: string) {
-        cc.log("cache admob " + name);
-        if (cc.sys.isNative) {
-            sdkbox.PluginAdMob.cache(name);
-        }
+        console.log("cache admob " + name);
+        sdkbox.PluginAdMob.cache(name);
     };
 
     hide(name: string) {
-        cc.log("hide admob " + name);
-        if (cc.sys.isNative) {
-            sdkbox.PluginAdMob.hide(name);
-        }
+        console.log("hide admob " + name);
+        sdkbox.PluginAdMob.hide(name);
     };
 
     show(name: string) {
-        cc.log("show admob ", name);
-        if (cc.sys.isNative) {
-            sdkbox.PluginAdMob.show(name);
-        }
+        console.log("show admob ", name);
+        sdkbox.PluginAdMob.show(name);
     };
 
-    reward(name: string, cb: (currency?, amount?) => void) {
-        cc.log("show reward " + name);
-        this.rewardCallbacks[name] = cb;
-        if (cc.sys.isNative) {
+    async reward(name: string) {
+        return new Promise<Boolean>((resolve, reject) => {
+            console.log("show reward " + name);
             sdkbox.PluginAdMob.show(name);
-        }
+            this.rewardCallbacks[name] = (currency, amount) => {
+                if(amount > 0){
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            }
+        });
     };
 
     isAvailable(name: string) {

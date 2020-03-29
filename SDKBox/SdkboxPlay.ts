@@ -5,34 +5,42 @@ class SdkboxPlay {
         CON_STATUS: "CON_STATUS"
     }
     init() {
-        if (!cc.sys.isNative) {
-            return;
-        }
         sdkbox.PluginSdkboxPlay.init();
     }
+
     getInfo(field: string) {
         if (!cc.sys.isNative) {
             return;
         }
         return sdkbox.PluginSdkboxPlay.getPlayerAccountField(field);
     }
-    signin() {
-        if (!cc.sys.isNative) {
-            cc.log("not mobile platform");
-            return;
-        }
-        sdkbox.PluginSdkboxPlay.signin(true);
-        sdkbox.PluginSdkboxPlay.setListener({
-            onConnectionStatusChanged: (status: string) => {
-                cc.log("onConnectionStatusChanged", status);
-                cc.log("isSignin", sdkbox.PluginSdkboxPlay.isSignedIn());
-                cc.log("name", this.getInfo("name"));
-                cc.log("display_name", this.getInfo("display_name"));
-                cc.log("player_id", this.getInfo("player_id"));
-                bb.dispatch(this.EventType.CON_STATUS, status);
-            }
-        })
+
+    async signin() {
+        return new Promise<any>((resolve, reject) => {
+            sdkbox.PluginSdkboxPlay.signin(true);
+            sdkbox.PluginSdkboxPlay.setListener({
+                onConnectionStatusChanged: (status: string) => {
+                    if(!this.isSignin()) {
+                        return reject(status);
+                    }
+                    
+                    console.log("onConnectionStatusChanged", status);
+                    console.log("isSignin", sdkbox.PluginSdkboxPlay.isSignedIn());
+                    console.log("name", this.getInfo("name"));
+                    console.log("display_name", this.getInfo("display_name"));
+                    console.log("player_id", this.getInfo("player_id"));
+                    bb.dispatch(this.EventType.CON_STATUS, status);
+                    
+                    if(cc.sys.os == cc.sys.OS_ANDROID) {
+                        return resolve(this.getInfo("server_auth_code"));
+                    } else if (cc.sys.os == cc.sys.OS_IOS) {
+                        return resolve(sdkbox.PluginSdkboxPlay.generateIdentityVerificationSignature())
+                    }
+                }
+            });
+        });
     }
+
     isSignin() {
         if (!cc.sys.isNative) {
             return false;
@@ -77,7 +85,7 @@ class SdkboxPlay {
         }
     }
     unlockAchievement(name: string) {
-        if(this.isSignin()){
+        if (this.isSignin()) {
             sdkbox.PluginSdkboxPlay.unlockAchievement(name);
         }
     }
