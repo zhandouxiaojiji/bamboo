@@ -13,6 +13,7 @@ class Network {
     acc: string;
     authorization: string;
     userInfo: UserInfo;
+    appname: string;
 
     init(host: string) {
         this.host = bb.getData("host", host);
@@ -42,6 +43,9 @@ class Network {
     }
 
     async login(appname?: string, account?: string) {
+        if(appname) {
+            this.appname = appname;
+        }
         return new Promise<any>((resolve, reject) => {
             const reqAuth = async () => {
                 var resp = await this.asyncHttpPost({
@@ -64,7 +68,7 @@ class Network {
                                     url: '/center/wechat/openid',
                                     data: {
                                         jscode: res.code,
-                                        appname,
+                                        appname: this.appname,
                                     }
                                 });
                                 this.acc = resp.openid;
@@ -171,7 +175,7 @@ class Network {
             const resp = await this.asyncHttpPost({
                 url: "/center/user/get_value",
                 data: {
-                    appname,
+                    appname: this.appname,
                     key
                 }
             });
@@ -187,7 +191,7 @@ class Network {
         return this.asyncHttpPost({
             url: "/center/user/set_value",
             data: {
-                appname,
+                appname: this.appname,
                 key,
                 value,
             }
