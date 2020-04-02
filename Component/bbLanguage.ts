@@ -1,5 +1,5 @@
 import bb from "../bb";
-import Language from "../Language";
+import Language from "../Service/Language";
 
 const { ccclass, property } = cc._decorator;
 @ccclass

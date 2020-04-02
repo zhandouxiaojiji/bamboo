@@ -9,6 +9,9 @@ export default class ConsoleView extends cc.Component {
 
     start() {
         Console.init();
+        this.node.on(cc.Node.EventType.TOUCH_END, () => {
+            this.node.active = false;
+        });
     };
 
     onClickRun() {

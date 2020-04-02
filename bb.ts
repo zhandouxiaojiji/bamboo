@@ -9,19 +9,6 @@ export default {
         UNSCHEDULE: "UNSCHEDULE",
     },
 
-    log(...args: any) {
-        console.log(...args);
-        let s = "";
-        for (let i = 0; i < args.length; i++) {
-            if (args[i]) {
-                s = s + args[i].toString() + "\t";
-            } else {
-                s = s + "undefined" + "\t";
-            }
-        }
-        Console.addLog(s);
-    },
-
     on(eventNames: any, callback: (...args: any) => void, target?: any) {
         GlobalEvent.on(eventNames, callback, target);
     },
