@@ -1,5 +1,5 @@
 import bb from "../bb";
-import ResLoader, {EventType} from "../ResLoader";
+import ResLoader, {EventType} from "../Service/ResLoader";
 
 const { ccclass, property } = cc._decorator;
 

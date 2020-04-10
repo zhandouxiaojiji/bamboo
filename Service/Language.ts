@@ -1,4 +1,4 @@
-import bb from "./bb";
+import bb from "../bb";
 
 class Language {
     data: any;

@@ -1,4 +1,4 @@
-import bb from "./bb";
+import bb from "../bb";
 
 export interface ResItem {
     name: string;
@@ -40,8 +40,5 @@ class ResLoader {
         return this.name2Item[name].res;
     }
 }
-
-const resLoader = new ResLoader;
-
 
 export default new ResLoader();

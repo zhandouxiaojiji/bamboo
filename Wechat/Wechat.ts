@@ -192,7 +192,7 @@ class Wechat {
                     resolve(res.data);
                 },
                 fail: () => {
-                    reject("post error");
+                    reject(`get error, url:${req.url}`);
                 }
             })
         });
@@ -209,7 +209,7 @@ class Wechat {
                     resolve(res.data);
                 },
                 fail: () => {
-                    reject("post error");
+                    reject(`post error, url:${req.url}`);
                 }
             })
         });
