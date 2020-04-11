@@ -13,6 +13,11 @@
 + 新手指引
 + 一些常用的组件
 
+## 使用示例
++ 客户端 https://github.com/zhandouxiaojiji/bamboo-sample
++ 服务端 https://github.com/zhandouxiaojiji/bewater-sample
++ 完整项目示例 https://github.com/zhandouxiaojiji/mini-sample
+
 ## rpc请求
 为了代码有更高的可读性，本项目尽量少用回调函数，改为同步调用，就是es6中的Promise，有点类似rpc服务。您会在示例里发现大量像这样的代码:
 ```
