@@ -104,7 +104,9 @@ ConsoleService.addCmd("gmtest", (arg1, arg2) => {
 + 目前Network只支持Http协议，后续会添加Websocket和原生socket。其中登录的一些流程和API被我写死，这部分会考虑做的更通用些
 + 接入其它小游戏平台
 + 远程资源加载
-+ 支持protobuf协议
++ 支持protobuf
++ 类似mock的本地模拟
++ 行为树框架
 
 # CocosCreator Minigame Framework
 You know baby, This bamboo is longer, more flexible, and very much alive -- Bruce Lee
