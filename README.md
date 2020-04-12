@@ -20,7 +20,7 @@
 
 ## rpc请求
 为了代码有更高的可读性，本项目尽量少用回调函数，改为同步调用，就是es6中的Promise，有点类似rpc服务。您会在示例里发现大量像这样的代码:
-```
+```typescript
 (async () => {
     var resp = await Http.asyncPost({url: "test.com/api/aaa"});
     if(resp.ok) {
@@ -34,7 +34,7 @@
 
 ## 全局事件机制
 ccc自带的事件机制似乎太依赖组件，不太适合一些单类的使用。我另写了一套很简单的事件机制，更适合做数据模型和界面逻辑的分离。
-```
+```typescript
 // 在界面上侦听全局事件
 bb.on(Language.EventType.CHANGE_LANGUAGE, (code: number) => {
     // TODO change code
@@ -46,7 +46,7 @@ bb.dispatch(Language.EventType.CHANGE_LANGUAGE, code);
 
 ## 网络模块
 Service/Network模块已经集成SdkboxPlay(谷歌游戏服务和苹果GameCenter)，微信小程序等几种sdk的登录，与开发者的第三方服务器间的通讯。
-```
+```typescript
 (async () => {
     Network.init(def.HttpHost.RELEASE);
     if (cc.sys.isBrowser) {
@@ -62,7 +62,7 @@ Service/Network模块已经集成SdkboxPlay(谷歌游戏服务和苹果GameCente
 
 ## 广告模块
 目前已接入微信MP广告和Google的Admob，其中Admob需要sdkbox_config.json里定义配置,微信广告定义WechatAdConf即可
-```
+```typescript
 Ad.init(conf);
 Ad.showBanner("bottom"); // 横幅广告
 Ad.showInterstitial("gameover"); // 插页广告
@@ -78,14 +78,14 @@ Ad.showInterstitial("gameover"); // 插页广告
 
 ## 多语言支持
 本项目未使用i18插件，而是另外实现了一套非常简单的方案。Service/Lanugage是单例，由导出的配置文件初始化，由它来统一管理所有多语言的字符串。给需要支持多语言的cc.Label和cc.Sprite添加bbLanugage组件，并在属性面板填写strId即可。
-```
+```typescript
 Language.init(languageProp);
 let str = Language.getStr("Hello");
 ```
 
 ## GM控制台
 为了方便游戏的测试，我添加了一个简单的GM控制台界面(ConsoleView.prefab)，可以很方便的添加GM指令和测试按钮
-```
+```typescript
 ConsoleService.addCustom("测试按钮", () => {
     console.log("this is a test button");
 });
