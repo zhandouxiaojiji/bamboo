@@ -3,12 +3,13 @@ import User from "./User";
 
 export interface RankItemModel {
   k: string;
-  v: {
-    rank: number;
-    nickName: string;
-    avatarUrl: string;
-    score: number;
-  }
+  v: any;
+  // {
+  //   rank: number;
+  //   nickName: string;
+  //   avatarUrl: string;
+  //   score: number;
+  // }
 }
 
 class Rank {
