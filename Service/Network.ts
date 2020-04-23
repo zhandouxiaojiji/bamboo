@@ -1,7 +1,7 @@
-import bb from "../bb";
 import Http, { HttpRequest } from "../Network/Http";
 import Wechat from "../Wechat/Wechat";
 import SdkboxPlay from "../SDKBox/SdkboxPlay";
+import { WebSock, WsRequest } from "../Network/WebSock";
 
 export interface UserInfo {
     avatarUrl?: string;
@@ -9,33 +9,37 @@ export interface UserInfo {
 }
 
 class Network {
-    host: string;
-    acc: string;
+    private ws: WebSock;
+    httpUrl: string;
+    wsUrl: string;
+    account: string;
     authorization: string;
     userInfo: UserInfo;
     appname: string;
 
-    init(host: string) {
-        this.host = bb.getData("host", host);
-        console.log("init host:", this.host);
+    init(httpUrl: string, wsUrl?: string) {
+        this.httpUrl = httpUrl;
+        this.wsUrl = wsUrl;
+        console.log("Network init:", this.httpUrl, this.wsUrl);
         if (cc.sys.isNative) {
             SdkboxPlay.init();
         }
+        if (this.wsUrl) {
+            this.ws = new WebSock(this.wsUrl);
+        }
     }
 
-    setHost(host) {
-        this.host = host;
-        bb.setData("host", host);
-        cc.log("Http setHost:", host);
+    setHttpHost(host: string) {
+        this.httpUrl = host;
     }
 
-    getHost() {
-        return this.host;
+    getHttpHost() {
+        return this.httpUrl;
     }
 
     private urlWithHost(req: HttpRequest) {
         const newReq: HttpRequest = {
-            url: this.host + req.url,
+            url: this.httpUrl + req.url,
             data: req.data,
             authorization: this.authorization,
         }
@@ -43,7 +47,7 @@ class Network {
     }
 
     async login(appname?: string, account?: string) {
-        if(appname) {
+        if (appname) {
             this.appname = appname;
         }
         return new Promise<any>((resolve, reject) => {
@@ -51,12 +55,12 @@ class Network {
                 var resp = await this.asyncHttpPost({
                     url: '/center/user/authorization',
                     data: {
-                        acc: this.acc
+                        acc: this.account
                     }
                 });
                 this.authorization = resp.authorization;
                 resolve(this.authorization);
-                console.log(`login success, acc:${this.acc}, authorization:${this.authorization}`);
+                console.log(`login success, acc:${this.account}, authorization:${this.authorization}`);
 
             }
             if (cc.sys.platform == cc.sys.WECHAT_GAME) {
@@ -71,7 +75,7 @@ class Network {
                                         appname: this.appname,
                                     }
                                 });
-                                this.acc = resp.openid;
+                                this.account = resp.openid;
                                 reqAuth();
                             })()
                         } else {
@@ -81,11 +85,11 @@ class Network {
                 })
             } else if (cc.sys.isNative) {
                 (async () => {
-                    this.acc = await SdkboxPlay.signin();
+                    this.account = await SdkboxPlay.signin();
                     reqAuth();
                 })();
             } else {
-                this.acc = account || 'test';
+                this.account = account || 'test';
                 reqAuth();
             }
         });
@@ -163,7 +167,7 @@ class Network {
                 // TODO
             } else {
                 this.userInfo = {
-                    nickName: this.acc
+                    nickName: this.account
                 }
             }
         }
@@ -196,6 +200,19 @@ class Network {
                 value,
             }
         });
+    }
+
+    wsOpen() {
+        if(this.ws) {
+            this.ws.open();
+        }
+    }
+
+    async wsCall(req: WsRequest) {
+        if(!this.ws) {
+            return req.defaultRes;
+        }
+        return this.ws.call(req);
     }
 
 };

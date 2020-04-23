@@ -6,6 +6,7 @@ export interface HttpRequest {
   data?: any;
   success?: (response: any, xhr?: XMLHttpRequest) => void;
   fail?: (xhr?: XMLHttpRequest) => void;
+  defaultRes?: any; // 当请求失败时返回的默认值
 }
 
 class Http {
@@ -64,7 +65,8 @@ class Http {
           resolve(res);
         },
         fail: () => {
-          reject("get error");
+          console.log("http get error, response default value");
+          resolve(req.defaultRes);
         }
       })
     });
@@ -80,7 +82,8 @@ class Http {
           resolve(res);
         },
         fail: () => {
-          reject("post error");
+          console.log("http post error, response default value");
+          resolve(req.defaultRes);
         }
       })
     });

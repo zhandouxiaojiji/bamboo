@@ -68,5 +68,6 @@ export default {
         cc.loader.loadRes(url, cc.AudioClip, function (err, clip) {
             cc.audioEngine.play(clip, loop || false, volume || 1);
         });
-    }
+    },
+
 };

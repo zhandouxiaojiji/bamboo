@@ -28,7 +28,7 @@ class Rank {
       if (this.rankData[rankname][0]) {
         this.rankData[rankname].forEach((item, index) => {
           item.v.rank = index + 1;
-          if (item.k == Network.acc) {
+          if (item.k == Network.account) {
             this.myData[rankname] = item;
           }
         });
@@ -38,7 +38,7 @@ class Rank {
         let score = await User.getScore(rankname);
         if (userInfo && score) {
           this.myData[rankname] = {
-            k: Network.acc,
+            k: Network.account,
             v: {
               rank: 0,
               nickName: userInfo.nickName,

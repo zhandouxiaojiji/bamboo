@@ -6,9 +6,9 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class bbResLoader extends cc.Component {
     @property(cc.Label)
-    label: cc.Label;
+    label: cc.Label = null;
     @property(cc.ProgressBar)
-    progressBar: cc.ProgressBar;
+    progressBar: cc.ProgressBar = null;
 
     start() {
         bb.on(EventType.UPDATE_PROCESS, (completedCount: number, totalCount: number, desc: string) => {

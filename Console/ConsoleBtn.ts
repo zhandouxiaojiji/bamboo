@@ -5,9 +5,9 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class ConsoleBtn extends cc.Component {
     @property(cc.Prefab)
-    consoleViewPrefab: cc.Prefab;
+    consoleViewPrefab: cc.Prefab = null;
     
-    consoleView: cc.Node;
+    consoleView: cc.Node = null;
 
     onClick() {
         if(this.consoleView) {
