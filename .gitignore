@@ -1,1 +1,12 @@
-./*.meta
+Component.meta
+Console.meta
+GlobalEvent.ts.meta
+LICENSE.meta
+Network.meta
+Prefabs.meta
+README.md.meta
+SDKBox.meta
+Service.meta
+Utils.ts.meta
+Wechat.meta
+bb.ts.meta
