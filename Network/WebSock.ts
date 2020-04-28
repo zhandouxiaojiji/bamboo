@@ -18,6 +18,7 @@ export class WebSock {
   }
 
   open() {
+    console.log("open ws", this.url);
     this.sock = new WebSocket(this.url);
     this.sock.onmessage = this.onMessage.bind(this);
     this.callbacks = {};
@@ -28,11 +29,12 @@ export class WebSock {
     this.callbacks = {};
   }
 
-  onMessage(res: any) {
-    let session = res.session;
-    const func = this.callbacks[session - 1];
+  onMessage(event: any) {
+    const res = JSON.parse(event.data);
+    console.log("onMessage", res);
+    const func = this.callbacks[res.session];
     if (func) {
-      func(res);
+      func(res.data);
     }
   }
 
@@ -42,7 +44,7 @@ export class WebSock {
       let interval = 100;
       const wait = () => {
         t += interval;
-        console.log("check", this.sock.readyState);
+        // console.log("check", this.sock.readyState);
         if (t > timeout || this.sock.readyState != WebSocket.CONNECTING) {
           resolve(this.sock.readyState);
         } else {
@@ -71,6 +73,7 @@ export class WebSock {
 
     return new Promise<any>((resolve, reject) => {
       const session = this.session;
+      console.log("send ping");
       this.sock.send(JSON.stringify({
         name: req.name,
         session: session,
