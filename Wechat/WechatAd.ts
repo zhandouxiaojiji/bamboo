@@ -4,21 +4,15 @@ export enum WechatAdType {
   BANNER,
   INTERSTITIAL,
   REWARDED,
-}
-
-export interface WechatAdStyle {
-  left?: number;
-  top?: number;
-  bottom?: number;
-  width?: number;
-  height?: number;
+  ICON_AD,
 }
 
 export interface WechatAdConf {
   adName: string;
   adType: WechatAdType;
   adUnitId: string;
-  style?: WechatAdStyle;
+  style?: any;
+  count?: number
 }
 
 export interface WechatAdUnit {
@@ -67,11 +61,27 @@ class WechatAd {
             console.log(`wechat rewarded ad ${name} error ${err}`)
           })
           break;
+        case WechatAdType.ICON_AD:
+          if (wx.createGameIcon) {
+            unit.ad = wx.createGameIcon({
+              adUnitId: conf.adUnitId,
+              count: conf.count,
+              style: conf.style,
+            });
+          }
+          if (unit.ad) {
+            unit.ad.load().then(() => {
+              unit.canUse = true;
+            }).catch(err => {
+              console.error(`wechat icon ad ${name} error ${err}`);
+            })
+          }
+          break;
       }
     }
   }
 
-  translateStyle(style: WechatAdStyle) {
+  translateStyle(style: any) {
     let left = style.left;
     let top = style.top;
     let width = style.width;
@@ -187,6 +197,40 @@ class WechatAd {
           })
       });
     });
+  }
+
+  showIconAd(name: string) {
+    let unit = this.units[name];
+    if (unit) {
+      if (unit.canUse) {
+        console.log(`wechat showIconAd ${name}`);
+        unit.ad.show();
+        return true;
+      } else {
+        console.log(`wechat icon ad ${name} not ready`);
+        return false;
+      }
+    } else {
+      console.log(`ad ${name} not exist`);
+      return false;
+    }
+  }
+
+  hideIconAd(name: string) {
+    let unit = this.units[name];
+    if (unit) {
+      if (unit.canUse) {
+        console.log(`wechat showIconAd ${name}`);
+        unit.ad.hide();
+        return true;
+      } else {
+        console.log(`wechat icon ad ${name} not ready`);
+        return false;
+      }
+    } else {
+      console.log(`ad ${name} not exist`);
+      return false;
+    }
   }
 }
 
