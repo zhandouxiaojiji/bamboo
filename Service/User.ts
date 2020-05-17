@@ -1,4 +1,5 @@
 import Network from "../../bamboo/Service/Network";
+import SdkboxPlay from "../SDKBox/SdkboxPlay";
 
 class User {
   scores: {[key: string]: number} = {}
@@ -9,15 +10,24 @@ class User {
 
   async getScore(key: string) {
     if (this.scores[key] == undefined) {
-      const value = await Network.getKV(key, this.appname);
+      let value;
+      if(cc.sys.isNative) {
+        value = SdkboxPlay.getMyScore(key);
+      } else {
+        value = await Network.getKV(key, this.appname);
+      }
       this.scores[key] = parseInt(value || "0");
     }
     return this.scores[key];
   }
 
   setScore(key: string, value: number) {
-    Network.setKV(key, String(value), this.appname);
     this.scores[key] = value;
+    if(cc.sys.isNative) {
+      SdkboxPlay.submitScore(key, value);
+      return;
+    }
+    Network.setKV(key, String(value), this.appname);
   }
 }
 
