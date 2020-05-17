@@ -52,13 +52,17 @@ class Network {
         }
         return new Promise<any>((resolve, reject) => {
             const reqAuth = async () => {
-                var resp = await this.asyncHttpPost({
+                var res = await this.asyncHttpPost({
                     url: '/center/user/authorization',
                     data: {
                         acc: this.account
                     }
                 });
-                this.authorization = resp.authorization;
+                if(!res) {
+                    console.log(`login fail, acc:${this.account}`);
+                    resolve();
+                }
+                this.authorization = res.authorization;
                 resolve(this.authorization);
                 console.log(`login success, acc:${this.account}, authorization:${this.authorization}`);
 
@@ -86,7 +90,9 @@ class Network {
             } else if (cc.sys.isNative) {
                 (async () => {
                     this.account = await SdkboxPlay.signin();
-                    reqAuth();
+                    if(this.account) {
+                        reqAuth();
+                    }
                 })();
             } else {
                 this.account = account || 'test';
@@ -116,14 +122,14 @@ class Network {
     }
     async asyncHttpPost(req: HttpRequest) {
         console.log("Http async post", req);
-        var resp;
+        var res;
         const newReq = this.urlWithHost(req);
         if (cc.sys.platform == cc.sys.WECHAT_GAME) {
-            resp = await Wechat.asyncHttpPost(newReq);
+            res = await Wechat.asyncHttpPost(newReq);
         } else {
-            resp = await Http.asyncPost(newReq);
+            res = await Http.asyncPost(newReq);
         }
-        if (resp.err == 4) {
+        if (res && res.err == 4) {
             let authorization = await this.login();
             if (authorization) {
                 return this.asyncHttpPost(req);
@@ -131,7 +137,7 @@ class Network {
                 throw new Error("login fail");
             }
         }
-        return resp;
+        return res;
     }
 
     httpGet(req: HttpRequest) {

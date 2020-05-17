@@ -21,7 +21,9 @@ class SdkboxPlay {
             sdkbox.PluginSdkboxPlay.setListener({
                 onConnectionStatusChanged: (status: string) => {
                     if(!this.isSignin()) {
-                        return reject(status);
+                        console.log("signin fail:", status);
+                        // return reject(status);
+                        return resolve();
                     }
                     
                     console.log("onConnectionStatusChanged", status);
@@ -63,12 +65,15 @@ class SdkboxPlay {
             cc.sys.localStorage.setItem(name, score);
             localScore = score;
         }
+        console.log("submitScore", name, score, "localScore", localScore);
         if (this.isSignin()) {
             const ret = sdkbox.PluginSdkboxPlay.getMyScore(name, 2, 2);
             const remoteScore = ret ? ret["score"] : 0;
             if (localScore > remoteScore) {
                 sdkbox.PluginSdkboxPlay.submitScore(name, score);
             }
+        } else {
+            console.log("submitScore fail, not signin")
         }
     }
     getMyScore(name: string) {

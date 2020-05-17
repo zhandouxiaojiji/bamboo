@@ -1,5 +1,6 @@
 import Network from "../Service/Network";
 import User from "./User";
+import SdkboxPlay from "../SDKBox/SdkboxPlay";
 
 export interface RankItemModel {
   k: string;
@@ -16,6 +17,10 @@ class Rank {
   rankData: { [key: string]: RankItemModel[] } = {};
   myData: { [key: string]: RankItemModel } = {};
   async fetch(rankname: string, appname?: string) {
+    if (cc.sys.isNative) {
+      // ANDROID/IOS 用sdkboxplays
+      return;
+    }
     if (!this.rankData[rankname]) {
       const resp = await Network.asyncHttpPost({
         url: "/center/rank/request",
@@ -56,6 +61,13 @@ class Rank {
   }
 
   async submitScore(appname: string, rankname: string, item: any) {
+    if(SdkboxPlay.isSignin()) {
+      console.log("submit score", appname, rankname, item);
+      SdkboxPlay.submitScore(rankname, item);
+      return;
+    } else {
+      console.log("submit score fail, no sigin");
+    }
     this.clear(rankname);
     return Network.asyncHttpPost({
       url: "/center/rank/submit",

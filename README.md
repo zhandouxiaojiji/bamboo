@@ -13,6 +13,9 @@
 + 新手指引
 + 一些常用的组件
 
+# CCC版本2.2.2
+实测CocosCreator2.3.0版本以上的sdkbox有bug，打包会出错，因此本框架最高支持2.2.2，后续等官方稳定之后再考虑升2.3
+
 ## 使用示例
 + 客户端 https://github.com/zhandouxiaojiji/bamboo-sample
 + 服务端 https://github.com/zhandouxiaojiji/bewater-sample
