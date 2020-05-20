@@ -10,3 +10,8 @@ export function randomNum(minNum: number, maxNum?: number) {
 export function cloneObject(obj: any) {
   return JSON.parse(JSON.stringify(obj));
 }
+
+// 判断是否为头条小游戏(区分微信)
+export function isTTGame() {
+  return window.tt != undefined
+}
