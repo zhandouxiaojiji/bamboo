@@ -2,6 +2,7 @@ import Http, { HttpRequest } from "../Network/Http";
 import Wechat from "../Wechat/Wechat";
 import SdkboxPlay from "../SDKBox/SdkboxPlay";
 import { WebSock, WsRequest } from "../Network/WebSock";
+import { isTTGame } from "../Utils";
 
 export interface UserInfo {
     avatarUrl?: string;
@@ -77,6 +78,7 @@ class Network {
                                     data: {
                                         jscode: res.code,
                                         appname: this.appname,
+                                        tt: isTTGame(),
                                     }
                                 });
                                 this.account = resp.openid;

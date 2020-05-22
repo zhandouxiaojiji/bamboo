@@ -41,9 +41,11 @@ class Wechat {
 		this.appId = appId;
 		let recorder = wx.getGameRecorderManager();
 		recorder.onStart(() => {
+			console.log("record start");
 			bb.dispatch(this.EventType.RECORD_START);
 		});
 		recorder.onStop((res) => {
+			console.log("record stop", res);
 			this.videoPath = res.videoPath
 			bb.dispatch(this.EventType.RECORD_STOP, res.videoPath);
 		})
@@ -260,22 +262,21 @@ class Wechat {
 	startRecord(duration: number) {
 		if (cc.sys.platform == cc.sys.WECHAT_GAME) {
 			let recorder = wx.getGameRecorderManager();
-			if (recorder.isFrameSupported()) {
-				recorder.start({ duration });
-			}
+			recorder.start({ duration });
 		}
 	}
 
 	stopRecord() {
 		if (cc.sys.platform == cc.sys.WECHAT_GAME) {
-			let gameRecorder = wx.getGameRecorderManager();
-			gameRecorder.stop();
+			let recorder = wx.getGameRecorderManager();
+			recorder.stop();
 		}
 	}
 
 	async shareVideo(title: string, desc: string) {
 		if (cc.sys.platform == cc.sys.WECHAT_GAME) {
 			return new Promise<any>((resolve, reject) => {
+				console.log("share", this.videoPath);
 				wx.shareAppMessage({
 					channel: 'video',
 					title,
@@ -284,9 +285,11 @@ class Wechat {
 						videoPath: this.videoPath
 					},
 					success: () => {
+						console.log('分享视频成功');
 						resolve(true);
 					},
-					fail: () => {
+					fail: (e) => {
+						console.log('分享视频失败', e);
 						resolve(false);
 					}
 				});
