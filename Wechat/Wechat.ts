@@ -1,5 +1,6 @@
 import { HttpRequest } from "../Network/Http"
 import bb from "../bb";
+import { isTTGame } from "../Utils";
 
 export enum Gender {
 	UNKNOW,
@@ -60,7 +61,7 @@ class Wechat {
 			wx.getSetting({
 				success: (res) => {
 					console.log(res.authSetting)
-					if (res.authSetting["scope.userInfo"]) {
+					if (isTTGame() || res.authSetting["scope.userInfo"]) {
 						wx.getUserInfo({
 							success: (res) => {
 								var userInfo = res.userInfo

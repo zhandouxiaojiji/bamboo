@@ -3,9 +3,9 @@
 
 # 基本功能
 + 全局事件机制
-+ Http协议
++ Http/Websocket协议
 + 多语言支持
-+ 微信小游戏
++ 微信小游戏(兼容头条)
 + SdkboxPlay(Android+iOS)
 + 广告展示(微信+Admob)
 + GM控制台
@@ -104,7 +104,7 @@ ConsoleService.addCmd("gmtest", (arg1, arg2) => {
 + bbResLoader 资源加载进度条
 
 ## 优化与改进计划
-+ 目前Network只支持Http协议，后续会添加Websocket和原生socket。其中登录的一些流程和API被我写死，这部分会考虑做的更通用些
++ 目前Network暂时不支持原生socket。其中登录的一些流程和API被我写死，这部分会考虑做的更通用些
 + 接入其它小游戏平台
 + 远程资源加载
 + 支持protobuf

@@ -1,4 +1,15 @@
 import bb from "../bb";
+import { isTTGame } from "../Utils";
+
+export enum WechatBannerStyle {
+  TOP_LEFT,
+  TOP_RIGHT,
+  TOP_CENTER,
+  BOTTOM_LEFT,
+  BOTTOM_RIGHT,
+  BOTTOM_CENTER,
+  CENTER,
+}
 
 export enum WechatAdType {
   BANNER,
@@ -83,46 +94,59 @@ class WechatAd {
     }
   }
 
-  translateStyle(style: any) {
-    let left = style.left;
-    let top = style.top;
-    let width = style.width;
-    if (width == 0) {
-      width = this.systemInfo.windowWidth;
-    }
-    if (!left && width) {
-      left = (this.systemInfo.windowWidth - width) / 2;
-    }
-    if (style.bottom != undefined) {
-      top = this.systemInfo.windowHeight * 0.9;
-    }
-    return {
-      left,
-      top,
-      width,
-    }
-  }
-
   showBanner(name: string) {
     let unit = this.units[name];
     if (unit) {
       if (!unit.ad) {
         const systemInfo = wx.getSystemInfoSync();
+        const screenWidth = systemInfo.windowWidth;
+        const screenHeight = systemInfo.windowHeight;
         unit.ad = wx.createBannerAd({
           adUnitId: unit.conf.adUnitId,
           adIntervals: 30,
-          style: this.translateStyle(unit.conf.style),
+          style: {
+            width: 200
+          },
         });
         unit.ad.show();
-        unit.ad.onResize(res => {
-          if (unit.conf.style.bottom != undefined) {
-            unit.ad.style.top = systemInfo.windowHeight - unit.ad.style.realHeight - 5 - unit.conf.style.bottom;
-          };
+        unit.ad.onLoad(() => {
           unit.canUse = true;
-        });
+        })
         unit.ad.onError(err => {
           console.log("err", err);
         });
+        unit.ad.onResize(res => {
+          switch (unit.conf.style) {
+            case WechatBannerStyle.TOP_LEFT:
+              unit.ad.style.top = 0;
+              unit.ad.style.left = 0;
+              break;
+            case WechatBannerStyle.TOP_RIGHT:
+              unit.ad.style.top = 0;
+              unit.ad.style.left = screenWidth - res.width;
+              break;
+            case WechatBannerStyle.TOP_CENTER:
+              unit.ad.style.top = 0;
+              unit.ad.style.left = (screenWidth - res.width) / 2; // 水平居中
+              break;
+            case WechatBannerStyle.BOTTOM_LEFT:
+              unit.ad.style.top = screenHeight - res.height;
+              unit.ad.style.left = 0;
+              break;
+            case WechatBannerStyle.BOTTOM_RIGHT:
+              unit.ad.style.top = screenHeight - res.height;
+              unit.ad.style.left = screenWidth - res.width;
+              break;
+            case WechatBannerStyle.BOTTOM_CENTER:
+              unit.ad.style.top = screenHeight - res.height;
+              unit.ad.style.left = (screenWidth - res.width) / 2; // 水平居中
+              break;
+            case WechatBannerStyle.CENTER:
+              unit.ad.style.top = (screenHeight - res.height) / 2; // 垂直居中
+              unit.ad.style.left = (screenWidth - res.width) / 2; // 水平居中
+              break;
+          }
+        })
       } else {
         unit.ad.show();
       }
