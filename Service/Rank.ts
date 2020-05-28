@@ -22,14 +22,15 @@ class Rank {
       return;
     }
     if (!this.rankData[rankname]) {
-      const resp = await Network.asyncHttpPost({
+      const res = await Network.asyncHttpPost({
         url: "/center/rank/request",
         data: {
           appname,
           rankname,
-        }
+        },
+        defaultRes: {list: []}
       });
-      this.rankData[rankname] = resp.list;
+      this.rankData[rankname] = res.list;
       if (this.rankData[rankname][0]) {
         this.rankData[rankname].forEach((item, index) => {
           item.v.rank = index + 1;
