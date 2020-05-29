@@ -64,9 +64,7 @@ class Network {
 	}
 
 	async login(appname?: string, account?: string) {
-		if (appname) {
-			this.appname = appname;
-		}
+		this.appname = appname;
 		return new Promise<any>((resolve, reject) => {
 			const reqAuth = async () => {
 				if (!this.account) {
@@ -85,7 +83,6 @@ class Network {
 					resolve();
 				}
 				this.authorization = res.authorization;
-				this.account = res.acc;
 				resolve(this.authorization);
 				console.log(`login success, acc:${this.account}, authorization:${this.authorization}`);
 			}
@@ -218,7 +215,7 @@ class Network {
 		return this.userInfo;
 	}
 
-	async getKV(key: string, appname?: string) {
+	async getKV(key: string) {
 		try {
 			const res = await this.asyncHttpPost({
 				url: "/center/user/get_value",
@@ -234,7 +231,7 @@ class Network {
 			return cc.sys.localStorage.getItem(key);
 		}
 	}
-	async setKV(key: string, value?: string, appname?: string) {
+	async setKV(key: string, value?: string) {
 		cc.sys.localStorage.setItem(key, value);
 		return this.asyncHttpPost({
 			url: "/center/user/set_value",

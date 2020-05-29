@@ -58,6 +58,24 @@ class Wechat {
 				resolve(this.userInfo);
 				return;
 			}
+			if (isTTGame()) {
+				// 头条直接请求
+				wx.getUserInfo({
+					success: (res) => {
+						var userInfo = res.userInfo
+						this.userInfo = {
+							nickName: userInfo.nickName,
+							avatarUrl: userInfo.avatarUrl,
+							gender: userInfo.gender,
+							province: userInfo.province,
+							city: userInfo.city,
+							country: userInfo.country,
+						};
+						resolve(this.userInfo);
+					}
+				});
+				return;
+			}
 			wx.getSetting({
 				success: (res) => {
 					console.log(res.authSetting)
