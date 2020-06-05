@@ -1,5 +1,6 @@
 import bb from "../bb";
 import { isTTGame } from "../Utils";
+import Wechat, { TTAppName } from "./Wechat";
 
 export enum WechatBannerStyle {
   TOP_LEFT,
@@ -49,7 +50,7 @@ class WechatAd {
       this.units[name] = unit;
       switch (conf.adType) {
         case WechatAdType.INTERSTITIAL:
-          if (!wx.createInterstitialAd) return;
+          if (!this.isInterstitialActive()) break;
           unit.ad = wx.createInterstitialAd({
             adUnitId: conf.adUnitId,
           });
@@ -62,7 +63,7 @@ class WechatAd {
           })
           break;
         case WechatAdType.REWARDED:
-          if (!wx.createRewardedVideoAd) return;
+          if (!this.isRewardedActive()) break;
           unit.ad = wx.createRewardedVideoAd({
             adUnitId: conf.adUnitId,
           });
@@ -94,7 +95,32 @@ class WechatAd {
     }
   }
 
+  isBannerActive() {
+    if(isTTGame()) {
+      const appName = Wechat.getTTAppname();
+      return appName == TTAppName.TOU_TIAO || appName == TTAppName.NEWS
+    } else {
+      return true;
+    }
+  }
+
+  isInterstitialActive() {
+    if(isTTGame()) {
+      const appName = Wechat.getTTAppname();
+      return appName == TTAppName.TOU_TIAO
+    } else {
+      return true;
+    }
+  }
+
+  isRewardedActive() {
+    return true;
+  }
+
   showBanner(name: string) {
+    if(!this.isBannerActive()) {
+      return;
+    }
     let unit = this.units[name];
     if (unit) {
       if (!unit.ad) {
@@ -158,6 +184,9 @@ class WechatAd {
   }
 
   hideBanner(name: string) {
+    if(!this.isBannerActive()) {
+      return;
+    }
     let unit = this.units[name];
     if (unit) {
       if (unit.canUse) {

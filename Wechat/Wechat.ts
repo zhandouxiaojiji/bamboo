@@ -8,6 +8,14 @@ export enum Gender {
 	FEMALE,
 }
 
+export const TTAppName: any = {
+	TOU_TIAO: 'Toutiao', // 今日头条
+	DOU_YIN: 'Douyin', // 抖音短视屏
+	XI_GUA: 'XiGua', // 西瓜视频
+	NEWS: 'news_article_lite', // 头条极速版
+	DEV: 'devtools', // 开发环境
+}
+
 export interface UserInfo {
 	nickName: string;
 	avatarUrl: string;
