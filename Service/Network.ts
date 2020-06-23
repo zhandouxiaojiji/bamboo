@@ -1,7 +1,7 @@
 import Http, { HttpRequest } from "../Network/Http";
 import Wechat from "../Wechat/Wechat";
 import SdkboxPlay from "../SDKBox/SdkboxPlay";
-import { WebSock, WsRequest } from "../Network/WebSock";
+import { WebSock, WsJsonRequest, WsProtoRequest, WsPackType, WebSockConf } from "../Network/WebSock";
 import { isTTGame } from "../Utils";
 
 export interface UserInfo {
@@ -20,15 +20,15 @@ class Network {
 	isGuest: boolean; // 游客模式
 	isLocal: boolean; // 单机模式
 
-	init(httpUrl: string, wsUrl?: string) {
+	init(httpUrl: string, wsConf: WebSockConf) {
 		this.httpUrl = httpUrl;
-		this.wsUrl = wsUrl;
+		this.wsUrl = wsConf.url;
 		console.log("Network init:", this.httpUrl, this.wsUrl);
 		if (cc.sys.isNative) {
 			SdkboxPlay.init();
 		}
 		if (this.wsUrl) {
-			this.ws = new WebSock(this.wsUrl);
+			this.ws = new WebSock(wsConf);
 		}
 	}
 
@@ -107,7 +107,7 @@ class Network {
 							reqAuth();
 						}
 					},
-					fail:(res) => {
+					fail: (res) => {
 						console.log('登录失败！' + res.errMsg)
 						reqAuth();
 					}
@@ -253,7 +253,7 @@ class Network {
 		}
 	}
 
-	async wsCall(req: WsRequest) {
+	async wsCall(req: WsJsonRequest | WsProtoRequest) {
 		if (!this.ws) {
 			return req.defaultRes;
 		}

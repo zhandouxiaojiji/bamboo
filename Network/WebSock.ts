@@ -1,20 +1,49 @@
-import bb from "../bb";
-import Network from "../Service/Network";
+import { Uint32toBinary } from "./Packet";
 
-export interface WsRequest {
+export enum WsPackType {
+  JSON,
+  PROTOBUF,
+}
+
+export interface WsJsonRequest {
   name: string;
   data?: any;
   defaultRes?: any;
 }
 
+export interface WsProtoRequest {
+  proto: any;
+  data?: any;
+  defaultRes?: any;
+}
+
+export interface ProtobufConf {
+  idToProto: any;
+  protoToId: any;
+}
+
+export interface WebSockConf {
+  url: string;
+  packType: WsPackType;
+  protobufConf?: ProtobufConf;
+}
+
 export class WebSock {
   sock: WebSocket;
+  packType: WsPackType;
   url: string;
   session: number = 0;
   callbacks: any;
+  idToProto: any;
+  protoToId: any;
 
-  constructor(url: string) {
-    this.url = url;
+  constructor(conf: WebSockConf) {
+    this.url = conf.url;
+    this.packType = conf.packType || WsPackType.JSON;
+    if (conf.protobufConf) {
+      this.idToProto = conf.protobufConf.idToProto;
+      this.protoToId = conf.protobufConf.protoToId;
+    }
   }
 
   open() {
@@ -29,12 +58,42 @@ export class WebSock {
     this.callbacks = {};
   }
 
-  onMessage(event: any) {
-    const res = JSON.parse(event.data);
-    console.log("onMessage", res);
+  onResponse(res: any) {
+    console.log("onResponse", res);
     const func = this.callbacks[res.session];
     if (func) {
       func(res.data);
+    }
+  }
+
+  onMessage(event: any) {
+    if (this.packType == WsPackType.JSON) {
+      const res = JSON.parse(event.data);
+      this.onResponse(res);
+    } else if (this.packType == WsPackType.PROTOBUF) {
+      let reader = new FileReader();
+      reader.onload = (obj) => {
+        let buff: any = obj.target.result;
+        console.log("arraybuff", buff);
+        let idx = 0;
+        let dv = new DataView(buff);
+        const session = dv.getUint32(idx);
+        idx += 4;
+        const protoId = dv.getUint32(idx);
+        idx += 4;
+        const protoBuff = new Uint8Array(buff.slice(idx + 4));
+        const proto = this.idToProto[protoId];
+        console.log(proto.name, protoBuff);
+        const data = proto.decode(protoBuff);
+        const res = {
+          session,
+          proto,
+          data,
+        }
+        this.onResponse(res);
+
+      }
+      reader.readAsArrayBuffer(event.data);
     }
   }
 
@@ -55,7 +114,7 @@ export class WebSock {
     });
   }
 
-  async call(req: WsRequest) {
+  async call(req: WsJsonRequest | WsProtoRequest | any) {
     if (!this.sock) {
       try {
         this.open();
@@ -72,13 +131,39 @@ export class WebSock {
     }
 
     return new Promise<any>((resolve, reject) => {
+      this.session++;
       const session = this.session;
+
       console.log("send ping");
-      this.sock.send(JSON.stringify({
-        name: req.name,
-        session: session,
-        data: req.data,
-      }));
+      if (this.packType == WsPackType.JSON) {
+        this.sock.send(JSON.stringify({
+          name: req.name,
+          session: session,
+          data: req.data,
+        }));
+      } else if (this.packType == WsPackType.PROTOBUF) {
+        const proto = req.proto;
+        if (!proto) {
+          return reject("proto is undefined!");
+        }
+
+        const protoId = this.protoToId[proto];
+        const protoBuff = proto.encode(req.data).finish();
+        const buffer = new Uint8Array(protoBuff.length + 12);
+        var idx = 0;
+        buffer.set(Uint32toBinary(session), 0);
+        idx += 4;
+        buffer.set(Uint32toBinary(protoId), idx);
+        idx += 4;
+        buffer.set(Uint32toBinary(protoBuff.length), idx);
+        idx += 4;
+        buffer.set(protoBuff, idx);
+        console.log("protoid", protoId);
+        console.log("protobuf", protoBuff);
+        console.log("buffer", buffer);
+        this.sock.send(buffer);
+      }
+
       this.callbacks[session] = (res) => {
         resolve(res);
       }
