@@ -74,7 +74,6 @@ export class WebSock {
       let reader = new FileReader();
       reader.onload = (obj) => {
         let buff: any = obj.target.result;
-        console.log("arraybuff", buff);
         let idx = 0;
         let dv = new DataView(buff);
         const session = dv.getUint32(idx);
