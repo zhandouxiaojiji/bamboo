@@ -15,3 +15,29 @@ export function cloneObject(obj: any) {
 export function isTTGame() {
   return window.tt != undefined
 }
+
+export async function loadProtoDefineAsync(definePath: string, protoTs: any) {
+  return new Promise((resolve, reject) => {
+    cc.loader.loadRes(definePath, (err, obj) => {
+      if (err) {
+        return reject(err);
+      }
+      const idToProto = {}
+      const protoToId = {}
+      for (let name in obj.json) {
+        let id = obj.json[name];
+        let arr = name.split('.');
+        let packageName = arr[0];
+        let simpleName = arr[1];
+        let proto = protoTs[packageName][simpleName];
+        idToProto[id] = proto;
+        protoToId[proto] = id;
+      }
+      resolve({
+        idToProto,
+        protoToId
+      })
+    })
+  })
+
+}
