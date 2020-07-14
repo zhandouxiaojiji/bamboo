@@ -20,14 +20,16 @@ class Network {
 	isGuest: boolean; // 游客模式
 	isLocal: boolean; // 单机模式
 
-	init(httpUrl: string, wsConf: WebSockConf) {
+	init(httpUrl: string, wsConf?: WebSockConf) {
 		this.httpUrl = httpUrl;
-		this.wsUrl = wsConf.url;
+		
 		console.log("Network init:", this.httpUrl, this.wsUrl);
 		if (cc.sys.isNative) {
 			SdkboxPlay.init();
 		}
-		if (this.wsUrl) {
+		
+		if (wsConf) {
+			this.wsUrl = wsConf.url;
 			this.ws = new WebSock(wsConf);
 		}
 	}
