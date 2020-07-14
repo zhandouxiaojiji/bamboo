@@ -50,7 +50,7 @@ class WechatAd {
       this.units[name] = unit;
       switch (conf.adType) {
         case WechatAdType.INTERSTITIAL:
-          if (!this.isInterstitialActive()) break;
+          if (!this.isInterstitialActive() || wx.createInterstitialAd) break;
           unit.ad = wx.createInterstitialAd({
             adUnitId: conf.adUnitId,
           });
@@ -63,7 +63,7 @@ class WechatAd {
           })
           break;
         case WechatAdType.REWARDED:
-          if (!this.isRewardedActive()) break;
+          if (!this.isRewardedActive() || !wx.createRewardedVideoAd ) break;
           unit.ad = wx.createRewardedVideoAd({
             adUnitId: conf.adUnitId,
           });

@@ -14,7 +14,7 @@ class User {
       if(cc.sys.isNative) {
         value = SdkboxPlay.getMyScore(key);
       } else {
-        value = await Network.getKV(key, this.appname);
+        value = await Network.getKV(key);
       }
       this.scores[key] = parseInt(value || "0");
     }
@@ -27,7 +27,7 @@ class User {
       SdkboxPlay.submitScore(key, value);
       return;
     }
-    Network.setKV(key, String(value), this.appname);
+    Network.setKV(key, String(value));
   }
 }
 
