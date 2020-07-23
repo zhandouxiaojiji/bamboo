@@ -50,20 +50,9 @@ class WechatAd {
       this.units[name] = unit;
       switch (conf.adType) {
         case WechatAdType.INTERSTITIAL:
-          if (!this.isInterstitialActive() || wx.createInterstitialAd) break;
-          unit.ad = wx.createInterstitialAd({
-            adUnitId: conf.adUnitId,
-          });
-          unit.ad.onLoad(() => {
-            console.log(`wechat interstitial ad ${name} is ready`);
-            unit.canUse = true;
-          });
-          unit.ad.onError(err => {
-            console.log(`wechat interstitial ad ${name} error ${err}`)
-          })
           break;
         case WechatAdType.REWARDED:
-          if (!this.isRewardedActive() || !wx.createRewardedVideoAd ) break;
+          if (!this.isRewardedActive() || !wx.createRewardedVideoAd) break;
           unit.ad = wx.createRewardedVideoAd({
             adUnitId: conf.adUnitId,
           });
@@ -96,7 +85,7 @@ class WechatAd {
   }
 
   isBannerActive() {
-    if(isTTGame()) {
+    if (isTTGame()) {
       const appName = Wechat.getTTAppname();
       return appName == TTAppName.TOU_TIAO || appName == TTAppName.NEWS
     } else {
@@ -105,7 +94,7 @@ class WechatAd {
   }
 
   isInterstitialActive() {
-    if(isTTGame()) {
+    if (isTTGame()) {
       const appName = Wechat.getTTAppname();
       return appName == TTAppName.TOU_TIAO
     } else {
@@ -118,7 +107,7 @@ class WechatAd {
   }
 
   showBanner(name: string) {
-    if(!this.isBannerActive()) {
+    if (!this.isBannerActive()) {
       return;
     }
     let unit = this.units[name];
@@ -184,7 +173,7 @@ class WechatAd {
   }
 
   hideBanner(name: string) {
-    if(!this.isBannerActive()) {
+    if (!this.isBannerActive()) {
       return;
     }
     let unit = this.units[name];
@@ -203,18 +192,27 @@ class WechatAd {
   }
 
   showInterstitial(name: string) {
+    console.log(`wechat showInterstitial ${name}`);
     let unit = this.units[name];
     if (unit) {
-      if (unit.canUse) {
-        console.log(`wecaht showInterstitial ${name}`);
+      let conf = unit.conf;
+      if (!this.isInterstitialActive() || !wx.createInterstitialAd) {
+        return;
+      }
+      unit.ad = wx.createInterstitialAd({
+        adUnitId: conf.adUnitId,
+      });
+      console.log(`wecaht showInterstitial id ${conf.adUnitId}`);
+      unit.ad.onLoad(() => {
+        console.log(`wechat interstitial ad ${name} is ready`);
         unit.ad.show().catch((err) => {
           console.error(`wecaht showInterstitial ${name} error ${err}`);
         });
         return true;
-      } else {
-        console.log(`wechat interstital ${name} not ready`);
-        return false;
-      }
+      });
+      unit.ad.onError(err => {
+        console.log(`wechat interstitial ad ${name} error ${err}`)
+      })
     } else {
       console.log(`ad ${name} not exist`);
       return false;
