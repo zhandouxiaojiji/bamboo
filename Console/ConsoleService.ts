@@ -1,12 +1,17 @@
 import bb from "../bb";
 import Language from "../Service/Language";
 
+interface ServerGmFunc {
+    (cmd: string): void;
+}
+
 class ConsoleService {
     EventType = {
         UPDATE_CUSTOM: "UPDATE_CUSTOM"
     };
-    customs: any = [];
-    cmds = {};
+    private customs: any = [];
+    private cmds = {};
+    private serverGmFunc: ServerGmFunc;
 
     init() {
         this.addCustom("切换中文", () => {
@@ -17,7 +22,7 @@ class ConsoleService {
         })
         this.addCmd("ls", () => {
             var arr = [];
-            for(let cmd in this.cmds) {
+            for (let cmd in this.cmds) {
                 arr.push(cmd);
             }
             arr.sort();
@@ -55,16 +60,24 @@ class ConsoleService {
     addCmd(name: string, callback: (...args: any) => void) {
         this.cmds[name] = callback;
     };
-    runCmd(str: string) {
-        var args = str.split(" ");
+    runCmd(cmd: string) {
+        var args = cmd.split(" ");
         var callback = this.cmds[args[0]];
         if (callback) {
             args.shift();
             callback.apply(callback, args);
         } else {
-            cc.log("todo send cmd to server");
+            if (this.serverGmFunc) {
+                this.serverGmFunc(cmd);
+            } else {
+                cc.log("cmd not exist");
+            }
         }
+    };
+
+    regServerGmFunc(func: ServerGmFunc) {
+        this.serverGmFunc = func;
     };
 };
 
-export default new ConsoleService;
+export default new ConsoleService();

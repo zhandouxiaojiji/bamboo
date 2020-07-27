@@ -1,8 +1,8 @@
 import bb from "../bb";
 
 class Language {
-    data: any;
-    language: string;
+    private data: any;
+    private language: string;
     EventType = {
         CHANGE_LANGUAGE: "CHANGE_LANGUAGE",
     }

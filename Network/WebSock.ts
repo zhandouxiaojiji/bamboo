@@ -133,7 +133,6 @@ export class WebSock {
       this.session++;
       const session = this.session;
 
-      console.log("send ping");
       if (this.packType == WsPackType.JSON) {
         this.sock.send(JSON.stringify({
           name: req.name,

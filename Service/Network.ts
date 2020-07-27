@@ -3,6 +3,7 @@ import Wechat from "../Wechat/Wechat";
 import SdkboxPlay from "../SDKBox/SdkboxPlay";
 import { WebSock, WsJsonRequest, WsProtoRequest, WsPackType, WebSockConf } from "../Network/WebSock";
 import { isTTGame } from "../Utils";
+import bb from "../bb";
 
 export interface UserInfo {
 	avatarUrl?: string;
@@ -19,6 +20,11 @@ class Network {
 	appname: string;
 	isGuest: boolean; // 游客模式
 	isLocal: boolean; // 单机模式
+
+	EventType = {
+		LOGIN_SUCESS: "LOGIN_SUCESS",
+		LOGIN_FAIL: "LOGIN_FAIL",
+	}
 
 	init(httpUrl: string, wsConf?: WebSockConf) {
 		this.httpUrl = httpUrl;
@@ -83,9 +89,11 @@ class Network {
 					console.log(`login fail, acc:${this.account}`);
 					this.isLocal = true;
 					resolve();
+					bb.dispatch(this.EventType.LOGIN_FAIL);
 				}
 				this.authorization = res.authorization;
 				resolve(this.authorization);
+				bb.dispatch(this.EventType.LOGIN_SUCESS);
 				console.log(`login success, acc:${this.account}, authorization:${this.authorization}`);
 			}
 			if (cc.sys.platform == cc.sys.WECHAT_GAME) {
