@@ -12,8 +12,9 @@ export interface UserInfo {
 
 class Network {
 	private ws: WebSock;
-	httpUrl: string;
-	wsUrl: string;
+	private httpUrl: string;
+	private wsConf: WebSockConf;
+	private wsPingTimer: NodeJS.Timeout;
 	account: string;
 	authorization: string;
 	userInfo: UserInfo;
@@ -28,14 +29,14 @@ class Network {
 
 	init(httpUrl: string, wsConf?: WebSockConf) {
 		this.httpUrl = httpUrl;
-		
-		console.log("Network init:", this.httpUrl, this.wsUrl);
+		this.wsConf = wsConf;
+
+		console.log("Network init:", this.httpUrl, wsConf);
 		if (cc.sys.isNative) {
 			SdkboxPlay.init();
 		}
-		
+
 		if (wsConf) {
-			this.wsUrl = wsConf.url;
 			this.ws = new WebSock(wsConf);
 		}
 	}
@@ -260,6 +261,23 @@ class Network {
 	wsOpen() {
 		if (this.ws) {
 			this.ws.open();
+			if (this.wsConf.pingReq) {
+				this.wsPingTimer = setInterval(() => {
+					if (!this.ws.isOpen()) {
+						return;
+					}
+					this.wsCall(this.wsConf.pingReq);
+				}, this.wsConf.pingInter ? this.wsConf.pingInter * 1000 : 20000);
+			}
+		}
+	}
+
+	wsClose() {
+		if (this.ws) {
+			this.ws.close();
+			if (this.wsPingTimer) {
+				clearInterval(this.wsPingTimer);
+			}
 		}
 	}
 

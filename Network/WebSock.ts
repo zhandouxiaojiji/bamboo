@@ -26,16 +26,18 @@ export interface WebSockConf {
   url: string;
   packType: WsPackType;
   protobufConf?: ProtobufConf;
+  pingReq?: WsProtoRequest | WsJsonRequest; // 心跳请求
+  pingInter?: number; // 心跳间隔s
 }
 
 export class WebSock {
-  sock: WebSocket;
-  packType: WsPackType;
-  url: string;
-  session: number = 0;
-  callbacks: any;
-  idToProto: any;
-  protoToId: any;
+  private sock: WebSocket;
+  private packType: WsPackType;
+  private url: string;
+  private session: number = 0;
+  private callbacks: any;
+  private idToProto: any;
+  private protoToId: any;
 
   constructor(conf: WebSockConf) {
     this.url = conf.url;
@@ -59,7 +61,7 @@ export class WebSock {
   }
 
   onResponse(res: any) {
-    console.log("onResponse", res);
+    // console.log("onResponse", res);
     const func = this.callbacks[res.session];
     if (func) {
       func(res.data);
@@ -82,7 +84,7 @@ export class WebSock {
         idx += 4;
         const protoBuff = new Uint8Array(buff.slice(idx + 4));
         const proto = this.idToProto[protoId];
-        console.log(proto.name, protoBuff);
+        // console.log(proto.name, protoBuff);
         const data = proto.decode(protoBuff);
         const res = {
           session,
@@ -111,6 +113,10 @@ export class WebSock {
       }
       wait();
     });
+  }
+
+  isOpen() {
+    return this.sock.readyState == WebSocket.OPEN
   }
 
   async call(req: WsJsonRequest | WsProtoRequest | any) {
