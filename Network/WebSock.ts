@@ -1,4 +1,6 @@
 import { Uint32toBinary } from "./Packet";
+import bb from "../bb";
+import Network from "../Service/Network";
 
 export enum WsPackType {
   JSON,
@@ -72,6 +74,8 @@ export class WebSock {
     if (this.packType == WsPackType.JSON) {
       const res = JSON.parse(event.data);
       this.onResponse(res);
+      bb.dispatch(Network.EventType.WS_RECV, res);
+      Network.dispatch(res.name, res.data);
     } else if (this.packType == WsPackType.PROTOBUF) {
       let reader = new FileReader();
       reader.onload = (obj) => {
@@ -91,6 +95,8 @@ export class WebSock {
           proto,
           data,
         }
+        bb.dispatch(Network.EventType.WS_RECV, res);
+        Network.dispatch(res.proto, res.data);
         this.onResponse(res);
 
       }
@@ -152,7 +158,7 @@ export class WebSock {
         }
 
         const protoId = this.protoToId[proto];
-        const protoBuff = proto.encode(req.data).finish();
+        const protoBuff = proto.encode(req.data||{}).finish();
         const buffer = new Uint8Array(protoBuff.length + 12);
         var idx = 0;
         buffer.set(Uint32toBinary(session), 0);
@@ -162,9 +168,9 @@ export class WebSock {
         buffer.set(Uint32toBinary(protoBuff.length), idx);
         idx += 4;
         buffer.set(protoBuff, idx);
-        console.log("protoid", protoId);
-        console.log("protobuf", protoBuff);
-        console.log("buffer", buffer);
+        // console.log("protoid", protoId);
+        // console.log("protobuf", protoBuff);
+        // console.log("buffer", buffer);
         this.sock.send(buffer);
       }
 

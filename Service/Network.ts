@@ -4,6 +4,7 @@ import SdkboxPlay from "../SDKBox/SdkboxPlay";
 import { WebSock, WsJsonRequest, WsProtoRequest, WsPackType, WebSockConf } from "../Network/WebSock";
 import { isTTGame } from "../Utils";
 import bb from "../bb";
+import Listener from "../Listener";
 
 export interface UserInfo {
 	avatarUrl?: string;
@@ -15,6 +16,8 @@ class Network {
 	private httpUrl: string;
 	private wsConf: WebSockConf;
 	private wsPingTimer: NodeJS.Timeout;
+	private listner: Listener = new Listener();
+
 	account: string;
 	authorization: string;
 	userInfo: UserInfo;
@@ -25,6 +28,7 @@ class Network {
 	EventType = {
 		LOGIN_SUCESS: "LOGIN_SUCESS",
 		LOGIN_FAIL: "LOGIN_FAIL",
+		WS_RECV: "WS_RECV",
 	}
 
 	init(httpUrl: string, wsConf?: WebSockConf) {
@@ -288,6 +292,15 @@ class Network {
 		return this.ws.call(req);
 	}
 
+	on(name: any, callback: (...args: any) => void, target?: any) {
+		this.listner.on(name, callback, target);
+	}
+	off(name: any, callback: (...args: any) => void, target?: any) {
+		this.listner.off(name, callback, target);
+	}
+	dispatch(name: any, ...args: any) {
+		this.listner.dispatch(name, ...args);
+	}
 };
 
 export default new Network();

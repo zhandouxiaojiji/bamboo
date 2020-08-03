@@ -1,23 +1,18 @@
 import bb from "./bb";
 
-class GlobalEvent {
+class Listener {
     handles = {};
     //发送事件
     dispatch(name: any, ...args: any) {
-        var returns = []; //返回值
-
-        for (var findEvenName in this.handles) {
-            if (findEvenName == name) {
-                for (var i = 0; i < this.handles[name].length; i++) {
-                    var handler = this.handles[name][i]
-                    var returnValue = handler.callback.apply(handler.target, args);
-                    returns.push(returnValue);
-                }
-            }
+        if (!this.handles[name]) {
+            return;
         }
-        return returns;
+        for (var i = 0; i < this.handles[name].length; i++) {
+            var handler = this.handles[name][i]
+            handler.callback.apply(handler.target, args);
+        }
     };
-    
+
     //添加普通事件
     on(eventNames: any, callback: () => void, target: any) {
         if (Array.isArray(eventNames) == false) {
@@ -57,4 +52,4 @@ class GlobalEvent {
     };
 };
 
-export default new GlobalEvent;
+export default Listener;
