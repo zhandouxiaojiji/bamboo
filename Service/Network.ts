@@ -139,6 +139,22 @@ class Network {
 		});
 	}
 
+
+	logout() {
+		if (this.ws) {
+			this.ws.close();
+			this.ws = new WebSock(this.wsConf);
+			if (this.wsPingTimer) {
+				clearInterval(this.wsPingTimer);
+			}
+		}
+		this.authorization = null;
+		this.isGuest = false;
+		this.isLocal = false;
+		this.userInfo = null;
+		this.account = null;
+	}
+
 	async asyncHttpGet(req: HttpRequest) {
 		console.log("Http async get", req);
 		if (this.isLocal) {
