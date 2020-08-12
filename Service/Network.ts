@@ -308,6 +308,12 @@ class Network {
 		return this.ws.call(req);
 	}
 
+	wsSend(req: WsJsonRequest | WsProtoRequest) {
+		if(this.ws) {
+			this.ws.send(req);
+		}
+	}
+
 	on(name: any, callback: (...args: any) => void, target?: any) {
 		this.listner.on(name, callback, target);
 	}

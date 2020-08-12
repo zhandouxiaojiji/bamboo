@@ -158,7 +158,7 @@ export class WebSock {
         }
 
         const protoId = this.protoToId[proto];
-        const protoBuff = proto.encode(req.data||{}).finish();
+        const protoBuff = proto.encode(req.data || {}).finish();
         const buffer = new Uint8Array(protoBuff.length + 12);
         var idx = 0;
         buffer.set(Uint32toBinary(session), 0);
@@ -178,5 +178,52 @@ export class WebSock {
         resolve(res);
       }
     });
+  }
+
+  send(req: WsJsonRequest | WsProtoRequest | any) {
+    if (!this.sock) {
+      try {
+        this.open();
+      } catch (error) {
+        console.error("ws open error", error);
+      }
+    }
+    if (this.sock.readyState == WebSocket.CONNECTING) {
+      console.error("connecting");
+      return;
+    }
+    if (this.sock.readyState != WebSocket.OPEN) {
+      return;
+    }
+    this.session++;
+    const session = this.session;
+
+    if (this.packType == WsPackType.JSON) {
+      this.sock.send(JSON.stringify({
+        name: req.name,
+        session: session,
+        data: req.data,
+      }));
+    } else if (this.packType == WsPackType.PROTOBUF) {
+      const proto = req.proto;
+      if (!proto) {
+        console.error("proto is undefined!");
+        return;
+      }
+
+      const protoId = this.protoToId[proto];
+      const protoBuff = proto.encode(req.data || {}).finish();
+      const buffer = new Uint8Array(protoBuff.length + 12);
+      var idx = 0;
+      buffer.set(Uint32toBinary(session), 0);
+      idx += 4;
+      buffer.set(Uint32toBinary(protoId), idx);
+      idx += 4;
+      buffer.set(Uint32toBinary(protoBuff.length), idx);
+      idx += 4;
+      buffer.set(protoBuff, idx);
+      console.log("ws send");
+      this.sock.send(buffer);
+    }
   }
 }
