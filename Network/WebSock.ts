@@ -63,7 +63,6 @@ export class WebSock {
   }
 
   onResponse(res: any) {
-    // console.log("onResponse", res);
     const func = this.callbacks[res.session];
     if (func) {
       func(res.data);
@@ -88,7 +87,6 @@ export class WebSock {
         idx += 4;
         const protoBuff = new Uint8Array(buff.slice(idx + 4));
         const proto = this.idToProto[protoId];
-        // console.log(proto.name, protoBuff);
         const data = proto.decode(protoBuff);
         const res = {
           session,
@@ -110,7 +108,6 @@ export class WebSock {
       let interval = 100;
       const wait = () => {
         t += interval;
-        // console.log("check", this.sock.readyState);
         if (t > timeout || this.sock.readyState != WebSocket.CONNECTING) {
           resolve(this.sock.readyState);
         } else {
@@ -130,7 +127,7 @@ export class WebSock {
       try {
         this.open();
       } catch (error) {
-        console.log("ws open error", error);
+        console.error("ws open error", error);
       }
     }
     if (this.sock.readyState == WebSocket.CONNECTING) {
@@ -168,9 +165,6 @@ export class WebSock {
         buffer.set(Uint32toBinary(protoBuff.length), idx);
         idx += 4;
         buffer.set(protoBuff, idx);
-        // console.log("protoid", protoId);
-        // console.log("protobuf", protoBuff);
-        // console.log("buffer", buffer);
         this.sock.send(buffer);
       }
 
@@ -189,7 +183,7 @@ export class WebSock {
       }
     }
     if (this.sock.readyState == WebSocket.CONNECTING) {
-      console.error("connecting");
+      console.log("connecting");
       return;
     }
     if (this.sock.readyState != WebSocket.OPEN) {
@@ -222,7 +216,6 @@ export class WebSock {
       buffer.set(Uint32toBinary(protoBuff.length), idx);
       idx += 4;
       buffer.set(protoBuff, idx);
-      console.log("ws send");
       this.sock.send(buffer);
     }
   }
