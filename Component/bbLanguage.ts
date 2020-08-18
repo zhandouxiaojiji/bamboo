@@ -3,11 +3,11 @@ import Language from "../Service/Language";
 
 const { ccclass, property } = cc._decorator;
 @ccclass
-export default class bbNotify extends cc.Component {
-	@property({ type: cc.String, tooltip: '文本定义' })
-	strId: string = "";
-	@property({ type: cc.Boolean, tooltip: '是否为图片' })
-	isSprite: boolean = false;
+export default class bbLanguage extends cc.Component {
+	@property(cc.String)
+	strId = "";
+	@property(cc.Boolean)
+	isSprite = false;
 
 	onLoad() {
 		if (this.strId == "") {
