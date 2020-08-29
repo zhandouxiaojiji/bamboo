@@ -7,28 +7,17 @@ export enum WsPackType {
   PROTOBUF,
 }
 
-export interface WsJsonRequest {
-  name: string;
-  data?: any;
-  defaultRes?: any;
-}
-
-export interface WsProtoRequest {
-  proto: any;
-  data?: any;
-  defaultRes?: any;
-}
-
 export interface ProtobufConf {
   idToProto: any;
-  protoToId: any;
+  idToName: any;
+  nameToId: any;
 }
 
 export interface WebSockConf {
   url: string;
   packType: WsPackType;
   protobufConf?: ProtobufConf;
-  pingReq?: WsProtoRequest | WsJsonRequest; // 心跳请求
+  pingName?: string; // 心跳请求
   pingInter?: number; // 心跳间隔s
 }
 
@@ -39,14 +28,17 @@ export class WebSock {
   private session: number = 0;
   private callbacks: any;
   private idToProto: any;
-  private protoToId: any;
+  private idToName: any;
+  private nameToId: any;
 
   constructor(conf: WebSockConf) {
     this.url = conf.url;
     this.packType = conf.packType || WsPackType.JSON;
     if (conf.protobufConf) {
       this.idToProto = conf.protobufConf.idToProto;
-      this.protoToId = conf.protobufConf.protoToId;
+      this.idToName = conf.protobufConf.idToName;
+      this.nameToId = conf.protobufConf.nameToId;
+      console.log(conf.protobufConf);
     }
   }
 
@@ -88,13 +80,14 @@ export class WebSock {
         const protoBuff = new Uint8Array(buff.slice(idx + 4));
         const proto = this.idToProto[protoId];
         const data = proto.decode(protoBuff);
+        const name = this.idToName[protoId];
         const res = {
           session,
-          proto,
+          name,
           data,
         }
         bb.dispatch(Network.EventType.WS_RECV, res);
-        Network.dispatch(res.proto, res.data);
+        Network.dispatch(res.name, res.data);
         this.onResponse(res);
 
       }
@@ -122,7 +115,7 @@ export class WebSock {
     return this.sock.readyState == WebSocket.OPEN
   }
 
-  async call(req: WsJsonRequest | WsProtoRequest | any) {
+  async call<T>(name: string, data?: T, defaultRes?: any) {
     if (!this.sock) {
       try {
         this.open();
@@ -135,7 +128,7 @@ export class WebSock {
       await this.waitWsConnecting(5000);
     }
     if (this.sock.readyState != WebSocket.OPEN) {
-      return req.defaultRes;
+      return defaultRes;
     }
 
     return new Promise<any>((resolve, reject) => {
@@ -143,19 +136,14 @@ export class WebSock {
       const session = this.session;
 
       if (this.packType == WsPackType.JSON) {
-        this.sock.send(JSON.stringify({
-          name: req.name,
-          session: session,
-          data: req.data,
-        }));
+        this.sock.send(JSON.stringify({ name, session, data, }));
       } else if (this.packType == WsPackType.PROTOBUF) {
-        const proto = req.proto;
-        if (!proto) {
+        const protoId = this.nameToId[name];
+        if (!protoId) {
           return reject("proto is undefined!");
         }
-
-        const protoId = this.protoToId[proto];
-        const protoBuff = proto.encode(req.data || {}).finish();
+        const proto = this.idToProto[protoId];
+        const protoBuff = proto.encode(data || {}).finish();
         const buffer = new Uint8Array(protoBuff.length + 12);
         var idx = 0;
         buffer.set(Uint32toBinary(session), 0);
@@ -174,7 +162,7 @@ export class WebSock {
     });
   }
 
-  send(req: WsJsonRequest | WsProtoRequest | any) {
+  send(name: string, data?: any) {
     if (!this.sock) {
       try {
         this.open();
@@ -193,20 +181,16 @@ export class WebSock {
     const session = this.session;
 
     if (this.packType == WsPackType.JSON) {
-      this.sock.send(JSON.stringify({
-        name: req.name,
-        session: session,
-        data: req.data,
-      }));
+      this.sock.send(JSON.stringify({ name, session, data }));
     } else if (this.packType == WsPackType.PROTOBUF) {
-      const proto = req.proto;
-      if (!proto) {
+
+      const protoId = this.nameToId[name];
+      if (!protoId) {
         console.error("proto is undefined!");
         return;
       }
-
-      const protoId = this.protoToId[proto];
-      const protoBuff = proto.encode(req.data || {}).finish();
+      const proto = this.idToProto[protoId];
+      const protoBuff = proto.encode(data || {}).finish();
       const buffer = new Uint8Array(protoBuff.length + 12);
       var idx = 0;
       buffer.set(Uint32toBinary(session), 0);

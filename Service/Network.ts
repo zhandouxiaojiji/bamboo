@@ -1,7 +1,7 @@
 import Http, { HttpRequest } from "../Network/Http";
 import Wechat from "../Wechat/Wechat";
 import SdkboxPlay from "../SDKBox/SdkboxPlay";
-import { WebSock, WsJsonRequest, WsProtoRequest, WsPackType, WebSockConf } from "../Network/WebSock";
+import { WebSock, WebSockConf } from "../Network/WebSock";
 import { isTTGame } from "../Utils";
 import bb from "../bb";
 import Listener from "../Listener";
@@ -281,12 +281,12 @@ class Network {
 	wsOpen() {
 		if (this.ws) {
 			this.ws.open();
-			if (this.wsConf.pingReq) {
+			if (this.wsConf.pingName) {
 				this.wsPingTimer = setInterval(() => {
 					if (!this.ws.isOpen()) {
 						return;
 					}
-					this.wsCall(this.wsConf.pingReq);
+					this.wsCall(this.wsConf.pingName);
 				}, this.wsConf.pingInter ? this.wsConf.pingInter * 1000 : 20000);
 			}
 		}
@@ -301,16 +301,16 @@ class Network {
 		}
 	}
 
-	async wsCall(req: WsJsonRequest | WsProtoRequest) {
+	async wsCall<T>(name: string, data?: T, defaultRes?: any) {
 		if (!this.ws) {
-			return req.defaultRes;
+			return defaultRes;
 		}
-		return this.ws.call(req);
+		return this.ws.call(name, data, defaultRes);
 	}
 
-	wsSend(req: WsJsonRequest | WsProtoRequest) {
+	wsSend<T>(name: string, data?: T) {
 		if(this.ws) {
-			this.ws.send(req);
+			this.ws.send(name, data);
 		}
 	}
 

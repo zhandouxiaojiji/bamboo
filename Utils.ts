@@ -18,9 +18,8 @@ export function isTTGame() {
 
 export function makeProtoDefine(name2id: any, protoTs: any) {
   const idToProto = {};
-  const protoToId = {};
-  const nameToProto = {};
-  const protoToName = {};
+  const nameToId = {};
+  const idToName = {};
   for (let name in name2id) {
     let id = name2id[name];
     let arr = name.split('.');
@@ -28,14 +27,12 @@ export function makeProtoDefine(name2id: any, protoTs: any) {
     let simpleName = arr[1];
     let proto = protoTs[packageName][simpleName];
     idToProto[id] = proto;
-    protoToId[proto] = id;
-    nameToProto[name] = proto;
-    protoToName[proto] = name;
+    idToName[id] = name;
+    nameToId[name] = id;
   }
   return {
     idToProto,
-    protoToId,
-    nameToProto,
-    protoToName,
+    idToName,
+    nameToId,
   }
 }
