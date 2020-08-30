@@ -1,5 +1,5 @@
 import bb from "../bb";
-import ResLoader, { EventType } from "../Service/ResLoader";
+import ResLoader, { ResLoaderEventType } from "../Service/ResLoader";
 
 const { ccclass, property } = cc._decorator;
 
@@ -11,7 +11,7 @@ export default class bbResLoader extends cc.Component {
 	progressBar: cc.ProgressBar = null;
 
 	start() {
-		bb.on(EventType.UPDATE_PROCESS, (completedCount: number, totalCount: number, desc: string) => {
+		bb.on(ResLoaderEventType.UPDATE_PROCESS, (completedCount: number, totalCount: number, desc: string) => {
 			if (this.label) {
 				this.label.string = `(${completedCount}/${totalCount})`;
 			}

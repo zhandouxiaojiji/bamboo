@@ -6,7 +6,7 @@ export interface ResItem {
     res?: any;
 }
 
-export const EventType = {
+export const ResLoaderEventType = {
     UPDATE_PROCESS: "UPDATE_PROCESS",
 }
 
@@ -25,7 +25,7 @@ class ResLoader {
             this.path2Item[item.path] = item;
         });
         cc.loader.loadResArray(list, cc.SpriteFrame, (completedCount: number, totalCount: number, item: any)=>{
-            bb.dispatch(EventType.UPDATE_PROCESS, completedCount, totalCount);
+            bb.dispatch(ResLoaderEventType.UPDATE_PROCESS, completedCount, totalCount);
         }, (err, sprites) => {
             sprites.forEach((e, i) => {
                 const resItem = arr[i];
