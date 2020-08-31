@@ -1,20 +1,19 @@
 # CocosCreator小游戏框架
 此项目是我使用CCC开发小游戏的一些总结，主要是一些可以复用的模块，特别是处理一些跨平台的问题，让开发者尽量少关心游戏业务逻辑以外的事。脚本使用Typescript，欢迎各路大侠补充pr。
 
+# CCC版本2.4.2
+
 # 基本功能
 + 全局事件机制
 + Http/Websocket协议
 + 多语言支持
-+ 微信小游戏(兼容头条)
++ 微信/头条小游戏
 + SdkboxPlay(Android+iOS)
 + 广告展示(微信+Admob)
 + GM控制台
 + 排行榜
 + 新手指引
 + 一些常用的组件
-
-# CCC版本2.2.2
-实测CocosCreator2.3.0版本以上的sdkbox有bug，打包会出错，因此本框架最高支持2.2.2，后续等官方稳定之后再考虑升2.3
 
 ## 使用示例
 + 客户端 https://github.com/zhandouxiaojiji/bamboo-sample
