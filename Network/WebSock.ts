@@ -2,6 +2,8 @@ import { Uint32toBinary } from "./Packet";
 import bb from "../bb";
 import Network from "../Service/Network";
 
+const isWechat = cc.sys.platform == cc.sys.WECHAT_GAME
+
 export enum WsPackType {
   JSON,
   PROTOBUF,
@@ -22,7 +24,7 @@ export interface WebSockConf {
 }
 
 export class WebSock {
-  private sock: WebSocket;
+  private sock: any // Websock or wx SocketTask;
   private packType: WsPackType;
   private url: string;
   private session: number = 0;
@@ -43,9 +45,21 @@ export class WebSock {
   }
 
   open() {
-    console.log("open ws", this.url);
-    this.sock = new WebSocket(this.url);
-    this.sock.onmessage = this.onMessage.bind(this);
+    console.log("open ws", this.url, WebSocket.CONNECTING, WebSocket.OPEN);
+    if (isWechat) {
+      this.sock = wx.connectSocket({
+        url: this.url,
+      });
+      wx.onSocketOpen(() => {
+        console.log("on socket open");
+      });
+      wx.onSocketMessage(res => {
+        this.onMessage(res);
+      });
+    } else {
+      this.sock = new WebSocket(this.url);
+      this.sock.onmessage = this.onMessage.bind(this);
+    }
     this.callbacks = {};
   }
 
@@ -61,6 +75,27 @@ export class WebSock {
     }
   }
 
+  private processBuffer(buff: ArrayBuffer | any) {
+    let idx = 0;
+    let dv = new DataView(buff);
+    const session = dv.getUint32(idx);
+    idx += 4;
+    const protoId = dv.getUint32(idx);
+    idx += 4;
+    const protoBuff = new Uint8Array(buff.slice(idx + 4));
+    const proto = this.idToProto[protoId];
+    const data = proto.decode(protoBuff);
+    const name = this.idToName[protoId];
+    const res = {
+      session,
+      name,
+      data,
+    }
+    bb.dispatch(Network.EventType.WS_RECV, res);
+    Network.dispatch(res.name, res.data);
+    this.onResponse(res);
+  }
+
   onMessage(event: any) {
     if (this.packType == WsPackType.JSON) {
       const res = JSON.parse(event.data);
@@ -68,28 +103,13 @@ export class WebSock {
       bb.dispatch(Network.EventType.WS_RECV, res);
       Network.dispatch(res.name, res.data);
     } else if (this.packType == WsPackType.PROTOBUF) {
+      if (cc.sys.platform == cc.sys.WECHAT_GAME) {
+        this.processBuffer(event.data);
+        return;
+      }
       let reader = new FileReader();
       reader.onload = (obj) => {
-        let buff: any = obj.target.result;
-        let idx = 0;
-        let dv = new DataView(buff);
-        const session = dv.getUint32(idx);
-        idx += 4;
-        const protoId = dv.getUint32(idx);
-        idx += 4;
-        const protoBuff = new Uint8Array(buff.slice(idx + 4));
-        const proto = this.idToProto[protoId];
-        const data = proto.decode(protoBuff);
-        const name = this.idToName[protoId];
-        const res = {
-          session,
-          name,
-          data,
-        }
-        bb.dispatch(Network.EventType.WS_RECV, res);
-        Network.dispatch(res.name, res.data);
-        this.onResponse(res);
-
+        this.processBuffer(obj.target.result)
       }
       reader.readAsArrayBuffer(event.data);
     }
@@ -101,7 +121,7 @@ export class WebSock {
       let interval = 100;
       const wait = () => {
         t += interval;
-        if (t > timeout || this.sock.readyState != WebSocket.CONNECTING) {
+        if (t > timeout || !this.isConnecting()) {
           resolve(this.sock.readyState);
         } else {
           setTimeout(wait, interval)
@@ -115,6 +135,10 @@ export class WebSock {
     return this.sock.readyState == WebSocket.OPEN
   }
 
+  isConnecting() {
+    return this.sock.readyState == WebSocket.CONNECTING
+  }
+
   async call<T>(name: string, data?: T, defaultRes?: any) {
     if (!this.sock) {
       try {
@@ -123,11 +147,11 @@ export class WebSock {
         console.error("ws open error", error);
       }
     }
-    if (this.sock.readyState == WebSocket.CONNECTING) {
+    if (this.isConnecting()) {
       console.log("connecting");
-      await this.waitWsConnecting(5000);
+      console.log("wait result", await this.waitWsConnecting(5000));
     }
-    if (this.sock.readyState != WebSocket.OPEN) {
+    if (!this.isOpen()) {
       return defaultRes;
     }
 
@@ -136,7 +160,11 @@ export class WebSock {
       const session = this.session;
 
       if (this.packType == WsPackType.JSON) {
-        this.sock.send(JSON.stringify({ name, session, data, }));
+        if (isWechat) {
+          this.sock.send({ data: JSON.stringify({ name, session, data }) });
+        } else {
+          this.sock.send(JSON.stringify({ name, session, data }));
+        }
       } else if (this.packType == WsPackType.PROTOBUF) {
         const protoId = this.nameToId[name];
         if (!protoId) {
@@ -144,16 +172,21 @@ export class WebSock {
         }
         const proto = this.idToProto[protoId];
         const protoBuff = proto.encode(data || {}).finish();
-        const buffer = new Uint8Array(protoBuff.length + 12);
+        const u8Array = new Uint8Array(protoBuff.length + 12);
         var idx = 0;
-        buffer.set(Uint32toBinary(session), 0);
+        u8Array.set(Uint32toBinary(session), 0);
         idx += 4;
-        buffer.set(Uint32toBinary(protoId), idx);
+        u8Array.set(Uint32toBinary(protoId), idx);
         idx += 4;
-        buffer.set(Uint32toBinary(protoBuff.length), idx);
+        u8Array.set(Uint32toBinary(protoBuff.length), idx);
         idx += 4;
-        buffer.set(protoBuff, idx);
-        this.sock.send(buffer);
+        u8Array.set(protoBuff, idx);
+        if (isWechat) {
+          console.log("wx ws call", u8Array.buffer);
+          this.sock.send({ data: u8Array.buffer });
+        } else {
+          this.sock.send(u8Array);
+        }
       }
 
       this.callbacks[session] = (res) => {
@@ -170,18 +203,22 @@ export class WebSock {
         console.error("ws open error", error);
       }
     }
-    if (this.sock.readyState == WebSocket.CONNECTING) {
+    if (this.isConnecting()) {
       console.log("connecting");
       return;
     }
-    if (this.sock.readyState != WebSocket.OPEN) {
+    if (!this.isOpen()) {
       return;
     }
     this.session++;
     const session = this.session;
 
     if (this.packType == WsPackType.JSON) {
-      this.sock.send(JSON.stringify({ name, session, data }));
+      if (isWechat) {
+        this.sock.send({ data: JSON.stringify({ name, session, data }) });
+      } else {
+        this.sock.send(JSON.stringify({ name, session, data }));
+      }
     } else if (this.packType == WsPackType.PROTOBUF) {
 
       const protoId = this.nameToId[name];
@@ -191,16 +228,22 @@ export class WebSock {
       }
       const proto = this.idToProto[protoId];
       const protoBuff = proto.encode(data || {}).finish();
-      const buffer = new Uint8Array(protoBuff.length + 12);
+      const u8Array = new Uint8Array(protoBuff.length + 12);
       var idx = 0;
-      buffer.set(Uint32toBinary(session), 0);
+      u8Array.set(Uint32toBinary(session), 0);
       idx += 4;
-      buffer.set(Uint32toBinary(protoId), idx);
+      u8Array.set(Uint32toBinary(protoId), idx);
       idx += 4;
-      buffer.set(Uint32toBinary(protoBuff.length), idx);
+      u8Array.set(Uint32toBinary(protoBuff.length), idx);
       idx += 4;
-      buffer.set(protoBuff, idx);
-      this.sock.send(buffer);
+      u8Array.set(protoBuff, idx);
+      if (isWechat) {
+        console.log("wx ws send", u8Array.buffer);
+        this.sock.send({ data: u8Array.buffer });
+      } else {
+        this.sock.send(u8Array);
+      }
+
     }
   }
 }
