@@ -1,13 +1,13 @@
 import WechatAd, { WechatAdConf } from "../Wechat/WechatAd";
 import Admob from "../SDKBox/Admob";
-import { isTTGame } from "../Utils";
+import { isTTGame, isWXGame } from "../Utils";
 
 export interface AdConf {
   wechat?: { [key: string]: WechatAdConf };
   toutiao?: { [key: string]: WechatAdConf };
 }
 
-const isWechat = cc.sys.platform == cc.sys.WECHAT_GAME
+const isWechat = isWXGame() || isTTGame()
 const isNative = cc.sys.isNative
 
 class Ad {

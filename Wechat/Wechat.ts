@@ -1,6 +1,8 @@
 import { HttpRequest } from "../Network/Http"
 import bb from "../bb";
-import { isTTGame } from "../Utils";
+import { isTTGame, isWXGame } from "../Utils";
+
+const isWechat = isWXGame() || isTTGame();
 
 export enum Gender {
 	UNKNOW,
@@ -25,6 +27,14 @@ export interface UserInfo {
 	country: string,
 }
 
+export interface AppMessage {
+	title?: string;
+	imageUrl?: string;
+	query?: string;
+	imageUrlId?: string;
+	toCurrentGroup?: boolean;
+}
+
 class Wechat {
 	userInfo: UserInfo;
 	appId: string;
@@ -39,12 +49,8 @@ class Wechat {
 		RECORD_STOP: "RECORD_STOP",
 	}
 
-	canUse() {
-		return cc.sys.platform == cc.sys.WECHAT_GAME
-	}
-
 	init(appId: string) {
-		if (!this.canUse()) {
+		if (!isWechat) {
 			return;
 		}
 		this.appId = appId;
@@ -285,21 +291,21 @@ class Wechat {
 	}
 
 	startRecord(duration: number) {
-		if (cc.sys.platform == cc.sys.WECHAT_GAME) {
+		if (isWechat) {
 			let recorder = wx.getGameRecorderManager();
 			recorder.start({ duration });
 		}
 	}
 
 	stopRecord() {
-		if (cc.sys.platform == cc.sys.WECHAT_GAME) {
+		if (isWechat) {
 			let recorder = wx.getGameRecorderManager();
 			recorder.stop();
 		}
 	}
 
 	async shareVideo(title: string, desc: string) {
-		if (cc.sys.platform == cc.sys.WECHAT_GAME) {
+		if (isWechat) {
 			return new Promise<any>((resolve, reject) => {
 				console.log("share", this.videoPath);
 				wx.shareAppMessage({
@@ -323,9 +329,13 @@ class Wechat {
 	}
 
 	getTTAppname() {
-		if (cc.sys.platform == cc.sys.WECHAT_GAME) {
+		if (isTTGame()) {
 			return wx.getSystemInfoSync().appName;
 		}
+	}
+
+	shareAppMessage(msg: AppMessage) {
+		wx.shareAppMessage(msg);
 	}
 
 }

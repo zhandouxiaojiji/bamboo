@@ -1,9 +1,9 @@
 import { Uint32toBinary } from "./Packet";
 import bb from "../bb";
 import Network from "../Service/Network";
-import { isWxGame, isTTGame } from "../Utils";
+import { isWXGame, isTTGame } from "../Utils";
 
-const isWechat = cc.sys.platform == cc.sys.WECHAT_GAME
+const isWechat = isWXGame() || isTTGame();
 
 export enum WsPackType {
   JSON,
@@ -104,7 +104,7 @@ export class WebSock {
       bb.dispatch(Network.EventType.WS_RECV, res);
       Network.dispatch(res.name, res.data);
     } else if (this.packType == WsPackType.PROTOBUF) {
-      if (isWxGame() || isTTGame()) {
+      if (isWXGame() || isTTGame()) {
         this.processBuffer(event.data);
         return;
       }
@@ -183,7 +183,6 @@ export class WebSock {
         idx += 4;
         u8Array.set(protoBuff, idx);
         if (isWechat) {
-          console.log("wx ws call", u8Array.buffer);
           this.sock.send({ data: u8Array.buffer });
         } else {
           this.sock.send(u8Array);

@@ -2,9 +2,11 @@ import Http, { HttpRequest } from "../Network/Http";
 import Wechat from "../Wechat/Wechat";
 import SdkboxPlay from "../SDKBox/SdkboxPlay";
 import { WebSock, WebSockConf } from "../Network/WebSock";
-import { isTTGame } from "../Utils";
+import { isTTGame, isWXGame } from "../Utils";
 import bb from "../bb";
 import Listener from "../Listener";
+
+const isWechat = isWXGame() || isTTGame();
 
 export interface UserInfo {
 	avatarUrl?: string;
@@ -101,7 +103,7 @@ class Network {
 				bb.dispatch(this.EventType.LOGIN_SUCESS);
 				console.log(`login success, acc:${this.account}, authorization:${this.authorization}`);
 			}
-			if (cc.sys.platform == cc.sys.WECHAT_GAME) {
+			if (isWechat) {
 				wx.login({
 					success: (res) => {
 						if (res.code) {
@@ -162,7 +164,7 @@ class Network {
 		}
 		var res;
 		const newReq = this.urlWithHost(req);
-		if (cc.sys.platform == cc.sys.WECHAT_GAME) {
+		if (isWechat) {
 			res = await Wechat.asyncHttpGet(newReq);
 		} else {
 			res = await Http.asyncGet(newReq);
@@ -184,7 +186,7 @@ class Network {
 		}
 		var res;
 		const newReq = this.urlWithHost(req);
-		if (cc.sys.platform == cc.sys.WECHAT_GAME) {
+		if (isWechat) {
 			res = await Wechat.asyncHttpPost(newReq);
 		} else {
 			res = await Http.asyncPost(newReq);
@@ -206,7 +208,7 @@ class Network {
 			return req.success(req.defaultRes);
 		}
 		const newReq = this.urlWithHost(req);
-		if (cc.sys.platform == cc.sys.WECHAT_GAME) {
+		if (isWechat) {
 			Wechat.httpGet(newReq);
 			return;
 		}
@@ -218,7 +220,7 @@ class Network {
 			return req.success(req.defaultRes);
 		}
 		const newReq = this.urlWithHost(req);
-		if (cc.sys.platform == cc.sys.WECHAT_GAME) {
+		if (isWechat) {
 			Wechat.httpPost(newReq);
 			return;
 		}
@@ -231,7 +233,7 @@ class Network {
 				this.userInfo = {
 					nickName: this.account,
 				}
-			} else if (cc.sys.platform == cc.sys.WECHAT_GAME) {
+			} else if (isWechat) {
 				const wxInfo = await Wechat.getUserInfo(askPrefab);
 				if (wxInfo) {
 					this.userInfo = {
