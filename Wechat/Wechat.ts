@@ -35,6 +35,14 @@ export interface AppMessage {
 	toCurrentGroup?: boolean;
 }
 
+export interface LaunchOptions {
+	scene: number;
+	query: any;
+	referrerInfo: any;
+	shareTicket?: string; // 仅适合微信
+	path?: string; // 仅适合头条
+}
+
 class Wechat {
 	userInfo: UserInfo;
 	appId: string;
@@ -336,6 +344,14 @@ class Wechat {
 
 	shareAppMessage(msg: AppMessage) {
 		wx.shareAppMessage(msg);
+	}
+
+	getLaunchOptionsSync(): LaunchOptions {
+		return wx.getLaunchOptionsSync()
+	}
+
+	onShow(callback: (LaunchOptions)) {
+		wx.onShow(callback)
 	}
 
 }
