@@ -16,6 +16,10 @@ export function isTTGame() {
   return window.tt != undefined
 }
 
+export function isWxGame() {
+  return window.wx != undefined && !window.tt
+}
+
 export function makeProtoDefine(name2id: any, protoTs: any) {
   const idToProto = {};
   const nameToId = {};

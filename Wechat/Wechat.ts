@@ -188,8 +188,6 @@ class Wechat {
 		});
 	}
 
-
-
 	submitScore(key: string, score: number) {
 		wx.setUserCloudStorage({
 			KVDataList: [{ key, value: String(score) }],

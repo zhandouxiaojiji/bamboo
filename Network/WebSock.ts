@@ -1,6 +1,7 @@
 import { Uint32toBinary } from "./Packet";
 import bb from "../bb";
 import Network from "../Service/Network";
+import { isWxGame, isTTGame } from "../Utils";
 
 const isWechat = cc.sys.platform == cc.sys.WECHAT_GAME
 
@@ -103,7 +104,7 @@ export class WebSock {
       bb.dispatch(Network.EventType.WS_RECV, res);
       Network.dispatch(res.name, res.data);
     } else if (this.packType == WsPackType.PROTOBUF) {
-      if (cc.sys.platform == cc.sys.WECHAT_GAME) {
+      if (isWxGame() || isTTGame()) {
         this.processBuffer(event.data);
         return;
       }
