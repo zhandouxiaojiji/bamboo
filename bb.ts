@@ -35,13 +35,25 @@ class bb {
         cc.sys.localStorage.setItem(k, v);
     }
 
-    open(viewPrefab: cc.Prefab) {
-        const node = cc.instantiate(viewPrefab);
-        node.parent = cc.find("Canvas");
-        return node;
+    open(viewPrefabs: cc.Prefab | cc.Prefab[]) {
+        const instantiate = (prefab: cc.Prefab) => {
+            const node = cc.instantiate(prefab);
+            node.parent = cc.find("Canvas");
+            return node;
+        }
+        if(viewPrefabs instanceof cc.Prefab) {
+            instantiate(viewPrefabs);
+        }else{
+            const nodes: cc.Node[] = [];
+            viewPrefabs.forEach(prefab => {
+                nodes.push(instantiate(prefab));
+            })
+            return nodes;
+        }
     }
+
     loadAndOpen(path: string, callback?: Function) {
-        cc.loader.loadRes(path, (err, prefab) => {
+        cc.resources.load<cc.Prefab>(path, (err, prefab) => {
             if (prefab) {
                 const node = this.open(prefab);
                 if (callback) {

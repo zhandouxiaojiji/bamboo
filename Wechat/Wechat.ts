@@ -343,7 +343,9 @@ class Wechat {
 	}
 
 	shareAppMessage(msg: AppMessage) {
-		wx.shareAppMessage(msg);
+		if (isWechat) {
+			wx.shareAppMessage(msg);
+		}
 	}
 
 	getLaunchOptionsSync(): LaunchOptions {
