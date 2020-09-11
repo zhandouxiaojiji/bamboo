@@ -75,7 +75,7 @@ class Wechat {
 	}
 
 	async getUserInfo(askPrefab?: cc.Prefab) {
-		return new Promise<any>((resolve) => {
+		return new Promise<UserInfo>((resolve) => {
 			if (this.userInfo) {
 				resolve(this.userInfo);
 				return;
@@ -169,7 +169,7 @@ class Wechat {
 		});
 	}
 
-	initUserInfoButton() {
+	initUserInfoButton(success?: any) {
 		let systemInfo = wx.getSystemInfoSync();
 		let width = systemInfo.windowWidth;
 		let height = systemInfo.windowHeight;
@@ -199,6 +199,9 @@ class Wechat {
 			this.userInfo = res.userInfo;
 			button.hide();
 			button.destroy();
+			if (success) {
+				success(this.userInfo);
+			}
 		});
 	}
 
