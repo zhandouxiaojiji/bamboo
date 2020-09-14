@@ -51,10 +51,11 @@ export class WebSock {
       this.sock = wx.connectSocket({
         url: this.url,
       });
-      wx.onSocketOpen(() => {
+      this.sock.onOpen(() => {
         console.log("on socket open");
       });
-      wx.onSocketMessage(res => {
+      this.sock.onMessage(res => {
+        console.log("onMessage", res);
         this.onMessage(res);
       });
     } else {
@@ -133,11 +134,11 @@ export class WebSock {
   }
 
   isOpen() {
-    return this.sock.readyState == WebSocket.OPEN
+    return this.sock && this.sock.readyState == WebSocket.OPEN
   }
 
   isConnecting() {
-    return this.sock.readyState == WebSocket.CONNECTING
+    return this.sock && this.sock.readyState == WebSocket.CONNECTING
   }
 
   async call<T>(name: string, data?: T, defaultRes?: any) {
