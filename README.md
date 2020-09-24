@@ -101,6 +101,7 @@ ConsoleService.addCmd("gmtest", (arg1, arg2) => {
 + bbLanguage 多语言组件
 + bbNotify 提示飘字
 + bbResLoader 资源加载进度条
++ bbLinkPreb 嵌套使用预制
 
 ## 优化与改进计划
 + 目前Network暂时不支持原生socket。其中登录的一些流程和API被我写死，这部分会考虑做的更通用些
@@ -109,6 +110,9 @@ ConsoleService.addCmd("gmtest", (arg1, arg2) => {
 + 支持protobuf
 + 类似mock的本地模拟
 + 行为树框架
+
+## 周边插件
++ [九宫格插件](https://github.com/zhandouxiaojiji/slicer-plugin)
 
 # CocosCreator Minigame Framework
 You know baby, This bamboo is longer, more flexible, and very much alive -- Bruce Lee
