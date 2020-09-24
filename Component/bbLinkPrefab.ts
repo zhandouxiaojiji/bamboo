@@ -3,9 +3,11 @@
 const { ccclass, executeInEditMode, property } = cc._decorator;
 @ccclass
 @executeInEditMode
-export default class LinkPrefab extends cc.Component {
+export default class bbLinkPrefab extends cc.Component {
     @property({ visible: false })
     private linkPrefab: cc.Prefab = null;
+
+    private prefabNode: cc.Node = null;
 
     @property({ type: cc.Prefab, visible: true, displayName: "预制体" })
     set prefab(value: cc.Prefab) {
@@ -19,6 +21,7 @@ export default class LinkPrefab extends cc.Component {
                 // cc.Object["Flags"].HideInHierarchy   // 当前节点及子节点在编辑器里不显示
                 prefabNode["_objFlags"] |= (cc.Object["Flags"].DontSave | cc.Object["Flags"].LockedInEditor | cc.Object["Flags"].HideInHierarchy);
                 this.node.addChild(prefabNode, -1) // 添加到最底层
+                this.prefabNode = prefabNode;
             }
         }
     }
@@ -33,11 +36,15 @@ export default class LinkPrefab extends cc.Component {
             this.prefab = this.linkPrefab;
         } else {
             // 运行模式
-            const node = cc.instantiate(this.linkPrefab);
-            this.node.parent.addChild(node);
-            this.node.removeFromParent();
-            this.node.destroy();
+            const prefabNode = cc.instantiate(this.linkPrefab);
+            this.node.addChild(prefabNode)
+            this.prefabNode = prefabNode;
         }
+    }
+
+    public getPrefabComponent<T extends cc.Component>(type: { prototype: T }): T {
+        let prefabNode = this.prefabNode
+        return prefabNode ? prefabNode.getComponent(type) : null;
     }
 
 }
