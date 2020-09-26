@@ -12,11 +12,15 @@ export function cloneObject(obj: any) {
 }
 
 export function isTTGame() {
-  return cc.sys.platform == cc.sys.BYTEDANCE_GAME
+  return cc.sys.platform == cc.sys.BYTEDANCE_GAME;
 }
 
 export function isWXGame() {
-  return cc.sys.platform == cc.sys.WECHAT_GAME
+  return cc.sys.platform == cc.sys.WECHAT_GAME;
+}
+
+export function isWechat() {
+  return isTTGame() || isWXGame();
 }
 
 export function makeProtoDefine(name2id: any, protoTs: any) {

@@ -303,6 +303,10 @@ class Network {
 		}
 	}
 
+	wsIsOpen() {
+		return this.ws.isOpen();
+	}
+
 	async wsCall<T>(name: string, data?: T, defaultRes?: any) {
 		if (!this.ws) {
 			return defaultRes;
