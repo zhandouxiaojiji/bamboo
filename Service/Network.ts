@@ -11,6 +11,7 @@ const isWechat = isWXGame() || isTTGame();
 export interface UserInfo {
 	avatarUrl?: string;
 	nickName: string;
+	gender: number;
 }
 
 class Network {
@@ -232,20 +233,23 @@ class Network {
 			if (this.isGuest) {
 				this.userInfo = {
 					nickName: this.account,
+					gender: 1,
 				}
 			} else if (isWechat) {
 				const wxInfo = await Wechat.getUserInfo(askPrefab);
 				if (wxInfo) {
 					this.userInfo = {
 						avatarUrl: wxInfo.avatarUrl,
-						nickName: wxInfo.nickName
+						nickName: wxInfo.nickName,
+						gender: wxInfo.gender,
 					}
 				}
 			} else if (cc.sys.isNative) {
 				// TODO
 			} else {
 				this.userInfo = {
-					nickName: this.account
+					nickName: this.account,
+					gender: 1,
 				}
 			}
 		}

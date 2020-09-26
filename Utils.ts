@@ -43,3 +43,18 @@ export function makeProtoDefine(name2id: any, protoTs: any) {
     nameToId,
   }
 }
+
+export function objToUri(obj: any) {
+  const result = [];
+  for (var key in obj) {
+    var value = obj[key];
+    if (value.constructor == Array) {
+      value.forEach(function (_value) {
+        result.push(key + "=" + _value);
+      });
+    } else {
+      result.push(key + '=' + value);
+    }
+  }
+  return result.join('&');
+}
