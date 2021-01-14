@@ -1,7 +1,7 @@
 # CocosCreator小游戏框架
 此项目是我使用CCC开发小游戏的一些总结，主要是一些可以复用的模块，特别是处理一些跨平台的问题，让开发者尽量少关心游戏业务逻辑以外的事。脚本使用Typescript，欢迎各路大侠补充pr。
 
-# CCC版本2.4.2
+# CCC版本2.4.3
 
 # 基本功能
 + 全局事件机制
@@ -101,7 +101,6 @@ ConsoleService.addCmd("gmtest", (arg1, arg2) => {
 + bbLanguage 多语言组件
 + bbNotify 提示飘字
 + bbResLoader 资源加载进度条
-+ bbLinkPreb 嵌套使用预制
 
 ## 优化与改进计划
 + 目前Network暂时不支持原生socket。其中登录的一些流程和API被我写死，这部分会考虑做的更通用些
